@@ -25,7 +25,7 @@ return [
             /** filePath @desc 配置文件本地保存的地址 */
             base_path() . '/config.yaml',
             /** ignore @desc true:不启动监听 false:启动监听 */
-            true
+            false
         ],
     ],
 
@@ -46,7 +46,7 @@ return [
                 'ephemeral' => false
             ],
             /** $ignore @desc true:不启动注册 false:启动注册 */
-            true
+            false
         ],
     ]
 ];

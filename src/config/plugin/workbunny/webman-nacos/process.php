@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 return [
     'instance-registrar' => [
-        'handler'  => \support\package\nacos\process\InstanceRegistrarProcess::class
+        'handler'  => \Workbunny\WebmanNacos\Process\InstanceRegistrarProcess::class
     ],
     'config-listener' => [
-        'handler'  => \support\package\nacos\process\ConfigListenerProcess::class
+        'handler'  => \Workbunny\WebmanNacos\Process\ConfigListenerProcess::class
     ]
 ];
