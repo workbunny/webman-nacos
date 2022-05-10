@@ -1,4 +1,4 @@
 <?php
 return [
-    Workbunny\WebmanNacos\ConfigLoad::class
+    \Workbunny\WebmanNacos\ConfigLoad::class
 ];

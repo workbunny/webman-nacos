@@ -29,7 +29,8 @@
     config()函数，如果项目中没有引入runkit7拓展，还可以采取一下两种方案处理：
 
         1. 将所有使用config()的文件头中加入use Workbunny\WebmanNacos\config;
-        2. 手动重写webman的support\helpers.php的config()，return Workbunny\WebmanNacos\config($key, $default);
 
+        2. 手动重写webman的support\helpers.php的config()，
+            return Workbunny\WebmanNacos\config($key, $default);
 
 

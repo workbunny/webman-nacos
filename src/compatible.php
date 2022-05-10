@@ -20,5 +20,5 @@ if(
     }
 }
 else{
-    include_once './helpers.php';
+    require 'helpers.php';
 }
