@@ -27,7 +27,7 @@
       "Workbunny\\WebmanNacos\\": "src"
     },
     "files": [
-      "./src/helpers.php.php"
+      "./src/helpers.php"
     ]
   }
 }
