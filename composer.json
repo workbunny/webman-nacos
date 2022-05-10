@@ -1,0 +1,30 @@
+{
+  "name": "workbunny/webman-nacos",
+  "type": "library",
+  "license": "MIT",
+  "description": "Webman plugin workbunny/webman-nacos",
+  "authors": [
+    {
+      "name": "chaz6chez",
+      "email": "250220719@qq.com",
+      "homepage": "http://chaz6chez.cn"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/workbunny/webman-nacos/issues",
+    "source": "https://github.com/workbunny/webman-nacos"
+  },
+  "require": {
+    "php": ">=7.4",
+    "guzzlehttp/promises": "^1.5",
+    "guzzlehttp/guzzle": "^7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Workbunny\\WebmanNacos\\": "src"
+    },
+    "files": [
+      "./src/helpers.php"
+    ]
+  }
+}
