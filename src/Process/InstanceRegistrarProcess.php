@@ -51,9 +51,9 @@ class InstanceRegistrarProcess extends AbstractProcess
                                         'ip' => $ip,
                                         'port' => $port
                                     ],
-                                    isset($option['groupName']) ? $option['groupName'] : null,
-                                    isset($option['namespaceId']) ? $option['namespaceId'] : null,
-                                    isset($option['ephemeral']) ? $option['ephemeral'] : null
+                                    $option['groupName'] ?? null,
+                                    $option['namespaceId'] ?? null,
+                                    $option['ephemeral'] ?? null
                                 )->then(function (ResponseInterface $response) {
                                     if($response->getStatusCode() !== 200){
                                         Log::debug('nacos beat failed', [$response->getBody()->getContents()]);
@@ -86,12 +86,12 @@ class InstanceRegistrarProcess extends AbstractProcess
 
                     $this->client->instance->delete(
                         $serviceName,
-                        isset($option['groupName']) ? $option['groupName'] : null,
+                        $option['groupName'] ?? null,
                         $ip,
                         $port,
                         [
-                            'namespaceId' => isset($option['namespaceId']) ? $option['namespaceId'] : null,
-                            'ephemeral' => isset($option['ephemeral']) ? $option['ephemeral'] : null
+                            'namespaceId' => $option['namespaceId'] ?? null,
+                            'ephemeral' => $option['ephemeral'] ?? null
                         ]
                     );
                 }

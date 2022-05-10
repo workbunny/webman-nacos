@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Workbunny\WebmanNacos\Process;
 
-use support\package\nacos\NacosClient;
+use Workbunny\WebmanNacos\Client as NacosClient;
 use Workerman\Worker;
 
 abstract class AbstractProcess

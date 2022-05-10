@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use support\Log;
 use Workerman\Timer;
 use Workerman\Worker;
+use function Workbunny\WebmanNacos\reload;
 
 class ConfigListenerProcess extends AbstractProcess
 {
@@ -37,9 +38,8 @@ class ConfigListenerProcess extends AbstractProcess
      */
     protected function _get(string $dataId, string $group, string $tenant, string $path)
     {
-        $res = $this->client->config->get($dataId, $group, $tenant);
-        if(file_put_contents($path, $res, LOCK_EX)){
-            @unlink(base_path() . '/config.reload.lock');
+        if($this->client->config->get($dataId, $group, $tenant)){
+            reload();
         }
     }
 
