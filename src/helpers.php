@@ -7,5 +7,9 @@ use Workerman\Worker;
 
 function reload()
 {
-    Worker::reloadAllWorkers();
+    function reload(string $file)
+    {
+        Worker::safeEcho($file . ' update and reload. ');
+        Worker::reloadAllWorkers();
+    }
 }

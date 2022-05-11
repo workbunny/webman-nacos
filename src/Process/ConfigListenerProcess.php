@@ -40,7 +40,7 @@ class ConfigListenerProcess extends AbstractProcess
     {
         $res = $this->client->config->get($dataId, $group, $tenant);
         if(file_put_contents($path, $res, LOCK_EX)){
-            reload();
+            reload($path);
         }
     }
 
