@@ -23,7 +23,7 @@ class InstanceRegistrarProcess extends AbstractProcess
     public function __construct()
     {
         parent::__construct();
-        $this->instanceRegistrars = config('sdk.package.nacos.instance_registrars');
+        $this->instanceRegistrars = config('plugin.workbunny.webman-nacos.app.instance_registrars');
     }
 
     /**

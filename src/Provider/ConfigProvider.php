@@ -79,7 +79,7 @@ class ConfigProvider extends AbstractProvider
                 'Listening-Configs' => $ListeningConfigs,
             ],
             RequestOptions::HEADERS => [
-                'Long-Pulling-Timeout' => $timeout ?? config('sdk.package.nacos.long_pulling_timeout'),
+                'Long-Pulling-Timeout' => $timeout ?? config('plugin.workbunny.webman-nacos.app.long_pulling_timeout'),
             ],
         ]);
     }
@@ -111,7 +111,7 @@ class ConfigProvider extends AbstractProvider
                 'Listening-Configs' => $ListeningConfigs,
             ],
             RequestOptions::HEADERS => [
-                'Long-Pulling-Timeout' => $timeout ?? config('sdk.package.nacos.long_pulling_timeout'),
+                'Long-Pulling-Timeout' => $timeout ?? config('plugin.workbunny.webman-nacos.app.long_pulling_timeout'),
             ],
         ]);
     }
@@ -141,7 +141,7 @@ class ConfigProvider extends AbstractProvider
                 'Listening-Configs' => $ListeningConfigs,
             ],
             RequestOptions::HEADERS => [
-                'Long-Pulling-Timeout' => $timeout ?? config('sdk.package.nacos.long_pulling_timeout'),
+                'Long-Pulling-Timeout' => $timeout ?? config('plugin.workbunny.webman-nacos.app.long_pulling_timeout'),
             ],
             'success' => $success,
             'error' => $error
