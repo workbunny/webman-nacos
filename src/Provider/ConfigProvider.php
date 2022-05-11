@@ -124,8 +124,8 @@ class ConfigProvider extends AbstractProvider
      *  'contentMD5' => '',
      *  'tenant' => ''
      * ]
-     * @param callable|null $success
-     * @param callable|null $error
+     * @param callable|null $success = function(\Workerman\Http\Response $response){}
+     * @param callable|null $error = function(\Exception $exception){}
      * @return bool|void
      * @throws GuzzleException
      */
