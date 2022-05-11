@@ -12,6 +12,8 @@ use Psr\Http\Message\ResponseInterface;
 use Workbunny\WebmanNacos\Traits\Authentication;
 use Workbunny\WebmanNacos\Traits\ErrorMsg;
 use Workbunny\WebmanNacos\Client as NacosClient;
+use Workerman\Http\Client as AsyncClient;
+use Workerman\Http\Response;
 
 /**
  * Class AbstractProvider
@@ -31,6 +33,9 @@ abstract class AbstractProvider
 
     /** @var Client|null  */
     protected ?Client $httpClient = null;
+
+    /** @var AsyncClient|null  */
+    protected ?AsyncClient $httpClientAsync = null;
 
     /** @var string  */
     protected string $host = '127.0.0.1';
@@ -75,12 +80,30 @@ abstract class AbstractProvider
     {
         if(!$this->httpClient instanceof Client){
             $config = [
-                'base_uri' => sprintf('http://%s:%d', $this->host ?? '127.0.0.1', $this->port ?? 8848),
+                'base_uri' => sprintf('http://%s:%d', $this->host, $this->port),
                 'timeout' => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 60) + 10,
             ];
             $this->httpClient = new Client($config);
         }
         return $this->httpClient;
+    }
+
+    /**
+     * 创建异步http客户端
+     * @return AsyncClient
+     */
+    public function httpClientAsync(): AsyncClient
+    {
+        if(!$this->httpClientAsync instanceof AsyncClient){
+            $config = [
+                'max_conn_per_addr' => 128,
+                'keepalive_timeout' => 15,
+                'connect_timeout'   => 30,
+                'timeout'           => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 60) + 10,
+            ];
+            $this->httpClientAsync = new AsyncClient($config);
+        }
+        return $this->httpClientAsync;
     }
 
     /**
@@ -124,6 +147,49 @@ abstract class AbstractProvider
                 $options[RequestOptions::QUERY]['accessToken'] = $token;
             }
             return $this->httpClient()->requestAsync($method, $uri, $options);
+        } catch (RequestException $exception) {
+            if ($exception->hasResponse()) {
+                if (200 != $exception->getResponse()->getStatusCode()) {
+                    return $this->setError(false, $exception->getResponse()->getBody()->getContents());
+                }
+            }
+            return $this->setError(false, 'server notice：' . $exception->getMessage());
+        }
+    }
+
+    /**
+     * 利用workerman事件循环的异步http客户端
+     * @param string $method
+     * @param string $uri
+     * @param array $options = [
+     *  RequestOptions::QUERY => [],
+     *  RequestOptions::HEADERS => [],
+     *  'data' => [],
+     *  'success' => function(\Workerman\Http\Response $response){},
+     *  'error' => function(\Exception $exception){}
+     * ]
+     * @return bool|void
+     * @throws GuzzleException
+     */
+    public function requestAsyncUseEventLoop(string $method, string $uri, array $options = [])
+    {
+        try {
+            # 同步阻塞获取token
+            if($token = $this->issueToken()){
+                $options[RequestOptions::QUERY]['accessToken'] = $token;
+            }
+            $queryString = http_build_query($options[RequestOptions::QUERY] ?? []);
+            $this->httpClientAsync()->request(
+                sprintf('http://%s:%d%s?%s', $this->host, $this->port, $uri, $queryString),
+                [
+                    'method'    => $method,
+                    'version'   => '1.1',
+                    'headers'   => $options[RequestOptions::HEADERS] ?? [],
+                    'data'      => $options['data'] ?? [],
+                    'success'   => $options['success'] ?? function (Response $response) {},
+                    'error'     => $options['error'] ?? function (\Exception $exception) {}
+                ]
+            );
         } catch (RequestException $exception) {
             if ($exception->hasResponse()) {
                 if (200 != $exception->getResponse()->getStatusCode()) {
