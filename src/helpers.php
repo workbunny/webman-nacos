@@ -5,11 +5,8 @@ namespace Workbunny\WebmanNacos;
 
 use Workerman\Worker;
 
-function reload()
+function reload(string $file)
 {
-    function reload(string $file)
-    {
-        Worker::safeEcho($file . ' update and reload. ');
-        Worker::reloadAllWorkers();
-    }
+    Worker::safeEcho($file . ' update and reload. ');
+    Worker::reloadAllWorkers();
 }
