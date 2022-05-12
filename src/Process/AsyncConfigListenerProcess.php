@@ -74,7 +74,7 @@ class AsyncConfigListenerProcess extends AbstractProcess
                                 'tenant' => $tenant
                         ], function (Response $response) use($dataId, $group, $tenant, $configPath){
                             if($response->getStatusCode() === 200){
-                                if($response->getBody()->getContents() !== ''){
+                                if((string)$response->getBody() !== ''){
                                     $this->_get($dataId, $group, $tenant, $configPath);
                                 }
                             }
