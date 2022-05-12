@@ -132,10 +132,10 @@ class ConfigProvider extends AbstractProvider
     public function listenerAsyncUseEventLoop(array $options, ?callable $success = null, ?callable $error = null)
     {
         // 监听数据报文。格式为 dataId^2Group^2contentMD5^2tenant^1或者dataId^2Group^2contentMD5^1。
-        $ListeningConfigs = $options['dataId'] ?? null . self::WORD_SEPARATOR .
-            $options['group'] ?? null . self::WORD_SEPARATOR .
-            $options['contentMD5'] ?? null . self::WORD_SEPARATOR .
-            $options['tenant'] ?? null . self::LINE_SEPARATOR;
+        $ListeningConfigs = ($options['dataId'] ?? null) . self::WORD_SEPARATOR .
+            ($options['group'] ?? null) . self::WORD_SEPARATOR .
+            ($options['contentMD5'] ?? null) . self::WORD_SEPARATOR .
+            ($options['tenant'] ?? null) . self::LINE_SEPARATOR;
         return $this->requestAsyncUseEventLoop('POST', '/nacos/v1/cs/configs/listener', [
             RequestOptions::QUERY   => [
                 'Listening-Configs' => $ListeningConfigs,
