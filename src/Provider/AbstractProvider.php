@@ -82,6 +82,9 @@ abstract class AbstractProvider
             $config = [
                 'base_uri' => sprintf('http://%s:%d', $this->host, $this->port),
                 'timeout' => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 60) + 10,
+                'headers' => [
+                    'Connection' => 'keep-alive'
+                ]
             ];
             $this->httpClient = new Client($config);
         }
@@ -179,12 +182,15 @@ abstract class AbstractProvider
                 $options[RequestOptions::QUERY]['accessToken'] = $token;
             }
             $queryString = http_build_query($options[RequestOptions::QUERY] ?? []);
+            $headers = array_merge($options[RequestOptions::HEADERS] ?? [], [
+                'Connection' => 'keep-alive'
+            ]);
             $this->httpClientAsync()->request(
                 sprintf('http://%s:%d%s?%s', $this->host, $this->port, $uri, $queryString),
                 [
                     'method'    => $method,
                     'version'   => '1.1',
-                    'headers'   => $options[RequestOptions::HEADERS] ?? [],
+                    'headers'   => $headers,
                     'data'      => $options['data'] ?? [],
                     'success'   => $options['success'] ?? function (Response $response) {},
                     'error'     => $options['error'] ?? function (\Exception $exception) {}
