@@ -11,6 +11,17 @@ use Workerman\Timer;
 use Workerman\Worker;
 use function Workbunny\WebmanNacos\reload;
 
+/**
+ * 单Timer阻塞监听器
+ *
+ * @desc 该监听器是独立进程创建了单一的Timer进行定时长轮询阻塞请求，
+ * 多个配置的长轮询请求会交给Guzzle的异步客户端进行并发请求；
+ *      整体逻辑在Timer的执行周期内是阻塞的，这里Timer的间隔时间与
+ * 长轮询请求时长保持一直的原因也在于避免影响下一个Timer的执行周期；
+ *      该监听器有一个缺点，就是在workerman的监听命令中，该进程会
+ * 始终保持BUSY状态。
+ * @author chaz6chez
+ */
 class ConfigListenerProcess extends AbstractProcess
 {
     /** @var int 长轮询间隔 秒 */

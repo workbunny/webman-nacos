@@ -13,31 +13,48 @@ return [
     /** 长轮询间隔 秒 @desc 组件包主要使用该项作为监听器间隔，使用{该值 * 1000}作为长轮询等待时长 */
     'long_pulling_interval'  => 30,
 
-    /** 配置文件监听器 @see \Workbunny\WebmanNacos\Process\ConfigListenerProcess */
+    /**
+     * 配置文件监听器
+     * @desc 可在config/plugin/workbunny/webman-nacos/process.php中进行修改以下两种监听器
+     * @see \Workbunny\WebmanNacos\Process\ConfigListenerProcess 单Timer同步监听器
+     * @see \Workbunny\WebmanNacos\Process\AsyncConfigListenerProcess 多Timer异步监听器
+     */
     'config_listeners' => [
         [
             /** dataId @desc 该值最好与配置文件名相同 */
             'config.yaml',
+
             /** groupName */
             'DEFAULT_GROUP',
+
             /** namespaceId */
             '',
+
             /** filePath @desc 配置文件本地保存的地址 */
             base_path() . '/config.yaml',
+
             /** ignore @desc true:不启动监听 false:启动监听 */
             false
         ],
+        # 以下可以新增多个数组
     ],
 
-    /** 实例注册器 @see \Workbunny\WebmanNacos\Process\InstanceRegistrarProcess */
+    /**
+     * 实例注册器
+     * @see \Workbunny\WebmanNacos\Process\InstanceRegistrarProcess
+     * @desc 这里的实例注册器主要用于静态的已知的实例注册，如果是项目内动态的实例注册，可以结合AOP+注解去实现对某个服务或者某个控制器的注册
+     */
     'instance_registrars' => [
         'main' => [
             /** serviceName */
             config('app.name'),
+
             /** ip */
             '',
+
             /** port */
             8787,
+
             /** optional @see \Workbunny\WebmanNacos\Provider\InstanceProvider::registerAsync() */
             [
                 'groupName' => 'DEFAULT_GROUP',
@@ -45,8 +62,10 @@ return [
                 'enabled' => true,
                 'ephemeral' => false
             ],
+
             /** $ignore @desc true:不启动注册 false:启动注册 */
             false
         ],
+        # 以下可以新增多个数组
     ]
 ];
