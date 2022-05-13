@@ -5,6 +5,18 @@ namespace Workbunny\WebmanNacos;
 
 use Workerman\Timer as WorkermanTimer;
 
+/**
+ * 定时器
+ *
+ * @desc 对workerman/timer的封装
+ * 1.延迟单此执行
+ * 2.立即单次执行
+ * 3.延迟循环执行
+ *      - 延迟与循环时间不同
+ *      - 延迟与循环间隔相同
+ * 4.立即循环执行
+ * @author chaz6chez
+ */
 final class Timer {
 
     /** @var array[] 子定时器 */

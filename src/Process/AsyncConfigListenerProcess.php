@@ -3,15 +3,23 @@ declare(strict_types=1);
 
 namespace Workbunny\WebmanNacos\Process;
 
-use GuzzleHttp\Promise\Utils;
-use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use support\Log;
 use Workerman\Http\Response;
-use Workerman\Timer;
+use Workbunny\WebmanNacos\Timer;
 use Workerman\Worker;
 use function Workbunny\WebmanNacos\reload;
 
+/**
+ * 多Timer异步监听器
+ *
+ * @desc 该监听器是独立进程创建了多个Timer进行定时长轮询阻塞请求，
+ * 多个配置的长轮询请求会一对一交给Timer进行处理，Timer回调中使用
+ * workerman/http-client进行基于workerman/event-loop的异步
+ * NIO请求；整体逻辑在Timer的执行周期内是非阻塞的；
+ *
+ * @author chaz6chez
+ */
 class AsyncConfigListenerProcess extends AbstractProcess
 {
     /** @var int 长轮询间隔 秒 */
@@ -64,8 +72,8 @@ class AsyncConfigListenerProcess extends AbstractProcess
                 if(!file_exists($configPath)){
                     $this->_get($dataId, $group, $tenant, $configPath);
                 }
-                $this->timers[$dataId] = Timer::add(
-                    $this->longPullingInterval,
+                $this->timers[$dataId] = Timer::add(0.0,
+                    (float)$this->longPullingInterval,
                     function () use($dataId, $group, $tenant, $configPath){
                         $this->client->config->listenerAsyncUseEventLoop([
                                 'dataId' => $dataId,
@@ -91,7 +99,9 @@ class AsyncConfigListenerProcess extends AbstractProcess
      */
     public function onWorkerStop(Worker $worker){
         foreach ($this->timers as $timer){
-            Timer::del($timer);
+            if(is_int($timer)){
+                Timer::del($timer);
+            }
         }
     }
 }

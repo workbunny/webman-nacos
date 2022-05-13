@@ -7,8 +7,8 @@ use GuzzleHttp\Promise\Utils;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use support\Log;
-use Workerman\Timer;
 use Workerman\Worker;
+use Workbunny\WebmanNacos\Timer;
 use function Workbunny\WebmanNacos\reload;
 
 /**
@@ -20,6 +20,7 @@ use function Workbunny\WebmanNacos\reload;
  * 长轮询请求时长保持一直的原因也在于避免影响下一个Timer的执行周期；
  *      该监听器有一个缺点，就是在workerman的监听命令中，该进程会
  * 始终保持BUSY状态。
+ *
  * @author chaz6chez
  */
 class ConfigListenerProcess extends AbstractProcess
@@ -73,7 +74,7 @@ class ConfigListenerProcess extends AbstractProcess
                 }
             }
             // 创建定时监听
-            Timer::add($this->longPullingInterval, function (){
+            Timer::add(0.0, (float)$this->longPullingInterval, function (){
                 $promises = [];
                 foreach ($this->configListeners as $listener){
                     list($dataId, $group, $tenant, $configPath) = $listener;
