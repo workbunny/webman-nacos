@@ -99,10 +99,7 @@ abstract class AbstractProvider
     {
         if(!$this->httpClientAsync instanceof AsyncClient){
             $config = [
-                'max_conn_per_addr' => 128,
-                'keepalive_timeout' => 15,
-                'connect_timeout'   => 30,
-                'timeout'           => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 60) + 10,
+                'timeout' => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30) + 10,
             ];
             $this->httpClientAsync = new AsyncClient($config);
         }
