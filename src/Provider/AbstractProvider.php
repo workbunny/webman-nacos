@@ -81,7 +81,7 @@ abstract class AbstractProvider
         if(!$this->httpClient instanceof Client){
             $config = [
                 'base_uri' => sprintf('http://%s:%d', $this->host, $this->port),
-                'timeout' => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 60) + 10,
+                'timeout' => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30) + 60,
                 'headers' => [
                     'Connection' => 'keep-alive'
                 ]
@@ -99,7 +99,8 @@ abstract class AbstractProvider
     {
         if(!$this->httpClientAsync instanceof AsyncClient){
             $config = [
-                'timeout' => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30) + 10,
+                'connect_timeout'   => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30),
+                'timeout'           => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30) + 60,
             ];
             $this->httpClientAsync = new AsyncClient($config);
         }
