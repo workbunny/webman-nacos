@@ -44,7 +44,7 @@ return [
     'instance_registrars' => [
         'main' => [
             /** serviceName */
-            config('app.name'),
+            config('app.name', 'webman'),
 
             /** ip */
             '',
