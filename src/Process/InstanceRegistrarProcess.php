@@ -49,7 +49,8 @@ class InstanceRegistrarProcess extends AbstractProcess
                                     $serviceName,
                                     [
                                         'ip' => $ip,
-                                        'port' => $port
+                                        'port' => $port,
+                                        'serviceName' => $serviceName,
                                     ],
                                     $option['groupName'] ?? null,
                                     $option['namespaceId'] ?? null,
