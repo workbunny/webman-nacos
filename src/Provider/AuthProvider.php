@@ -12,6 +12,9 @@ use Workbunny\WebmanNacos\Exception\NacosRequestException;
 
 class AuthProvider extends AbstractProvider
 {
+    const LOGIN_URL = 'nacos/v1/auth/users/login';
+    const LOGIN_METHOD = 'POST';
+
     /**
      * 授权登录
      * @param string $username
@@ -22,7 +25,7 @@ class AuthProvider extends AbstractProvider
     public function login(string $username, string $password): ResponseInterface
     {
         try {
-            $response = $this->httpClient()->request('POST', 'nacos/v1/auth/users/login', [
+            $response = $this->httpClient()->request(self::LOGIN_METHOD, self::LOGIN_URL, [
                 RequestOptions::QUERY => [
                     'username' => $username,
                 ],

@@ -5,6 +5,9 @@ namespace Workbunny\WebmanNacos;
 
 use Workerman\Worker;
 
+define('OPTIONS_SUCCESS','success');
+define('OPTIONS_ERROR','error');
+
 function reload(string $file)
 {
     Worker::log($file . ' update and reload. ');

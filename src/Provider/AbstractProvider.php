@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\RequestOptions;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Workbunny\WebmanNacos\Traits\Authentication;
 use Workbunny\WebmanNacos\Traits\ErrorMsg;
@@ -169,10 +170,10 @@ abstract class AbstractProvider
      *  'success' => function(\Workerman\Http\Response $response){},
      *  'error' => function(\Exception $exception){}
      * ]
-     * @return bool|void
+     * @return bool
      * @throws GuzzleException
      */
-    public function requestAsyncUseEventLoop(string $method, string $uri, array $options = [])
+    public function requestAsyncUseEventLoop(string $method, string $uri, array $options = []) : bool
     {
         try {
             # 同步阻塞获取token
@@ -194,6 +195,7 @@ abstract class AbstractProvider
                     'error'     => $options['error'] ?? function (\Exception $exception) {}
                 ]
             );
+            return true;
         } catch (RequestException $exception) {
             if ($exception->hasResponse()) {
                 if (200 != $exception->getResponse()->getStatusCode()) {
@@ -213,7 +215,7 @@ abstract class AbstractProvider
         try {
             $decode = json_decode((string) $response->getBody(), true, 512, 0 | JSON_THROW_ON_ERROR);
         } catch (\Throwable $exception) {
-            throw new \InvalidArgumentException($exception->getMessage(), $exception->getCode());
+            throw new InvalidArgumentException($exception->getMessage(), $exception->getCode());
         }
         return $decode;
     }
@@ -232,5 +234,34 @@ abstract class AbstractProvider
         }
 
         return $result;
+    }
+
+    /**
+     * @param array $options
+     * @param array $validators = [
+     *      ['serviceName', 'is_string'],
+     *      ['port', 'is_int']
+     * ]
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    protected function verify(array $options, array $validators): void
+    {
+        foreach ($validators as $validator){
+            list($key, $handler, $required) = $validator;
+            if(isset($options[$key])){
+                if(!function_exists($handler)){
+                    throw new InvalidArgumentException('Invalid Function: ' . $handler);
+                }
+                if($handler($options[$key])){
+                    continue;
+                }
+                goto fail;
+            }
+            if($required){
+                fail:
+                throw new InvalidArgumentException('Invalid Argument: ' . $key);
+            }
+        }
     }
 }
