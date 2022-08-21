@@ -49,19 +49,20 @@ webman-nacos组件默认会启动一个名为 **config-listener** 的进程，�
 ```php
 $client = new Workbunny\WebmanNacos\Client();
 
-# 异步非阻塞监听
+// 异步非阻塞监听
+// 注：在webman中是异步非阻塞的，不会阻塞当前进程
 $response = $client->config->listenerAsyncUseEventLoop();
 
-# 异步阻塞监听
+// 异步阻塞监听
+// 注：在webman中是异步阻塞的，返回的是Guzzle/PromiseInterface，配合wait()可以多条请求并行执行；
+//     请求会阻塞在 **wait()** 直到执行完毕；详见 **ConfigListernerProcess.php** 
 $response = $client->config->listenerAsync();
 
 # 同步阻塞监听
 $response = $client->config->listener();
 ```
-**listenerAsyncUseEventLoop()** 在webman中是异步非阻塞的，不会阻塞当前进程；
 
-**listenerAsync()** 在webman中是异步阻塞的，返回的是promise，多条请求可以同时触发，
-但需要调用 **wait()** 执行，请求会阻塞在 **wait()** 直到执行完毕；详见 **ConfigListernerProcess.php** ；
+**listenerAsync()** ；
 
 - 获取配置
 
@@ -139,9 +140,9 @@ if (false === $response) {
 
 - **具体使用参数都在源码内已标注，使用方法很简单，参考Nacos官方文档即可；**
 
-- **后缀为Async的方法是Guzzle异步请求，在workerman的on回调中依旧是阻塞，只是多个请求可以并发执行；**
+- **后缀为Async的方法是Guzzle异步请求，在当前业务执行周期中阻塞，多个请求可并行执行；**
 
-- **后缀为AsyncUseEventLoop的方法是workerman/http-client异步请求，在workerman的on回调中是非阻塞的；**
+- **后缀为AsyncUseEventLoop的方法是workerman/http-client异步请求，在当前业务周期中非阻塞；**
 
 ```php
 $client = new Workbunny\WebmanNacos\Client();
