@@ -62,8 +62,6 @@ $response = $client->config->listenerAsync();
 $response = $client->config->listener();
 ```
 
-**listenerAsync()** ；
-
 - 获取配置
 
 ```php

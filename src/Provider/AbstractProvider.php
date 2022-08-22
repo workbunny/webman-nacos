@@ -68,7 +68,12 @@ abstract class AbstractProvider
     public function __construct(NacosClient $client, ?array $config = null)
     {
         $this->client = $client;
-        $config = $config ?? config('plugin.workbunny.webman-nacos.app');
+        $config = $this->client->getConfigs() ??
+            (
+                function_exists('config') ?
+                config('plugin.workbunny.webman-nacos.app', $config) :
+                $config
+            );
         isset($config['host']) && $this->host = (string) $config['host'];
         isset($config['port']) && $this->port = (int) $config['port'];
         isset($config['username']) && $this->username = (string) $config['username'];
@@ -97,6 +102,9 @@ abstract class AbstractProvider
                     'Connection' => 'keep-alive'
                 ]
             ];
+            if($this->client()::$mockHandler !== null){
+                $config['handler'] = $this->client()::$mockHandler;
+            }
             $this->httpClient = new Client($config);
         }
         return $this->httpClient;
@@ -113,6 +121,9 @@ abstract class AbstractProvider
                 'connect_timeout'   => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30),
                 'timeout'           => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30) + 60,
             ];
+            if($this->client()::$mockHandler !== null){
+                $config['handler'] = $this->client()::$mockHandler;
+            }
             $this->httpClientAsync = new AsyncClient($config);
         }
         return $this->httpClientAsync;

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Workbunny\WebmanNacos;
 
+use GuzzleHttp\Handler\MockHandler;
 use Workbunny\WebmanNacos\Exception\NacosException;
 use Workbunny\WebmanNacos\Provider\ConfigProvider;
 use Workbunny\WebmanNacos\Provider\InstanceProvider;
@@ -31,6 +32,8 @@ use Workbunny\WebmanNacos\Provider\AuthProvider;
  */
 class Client
 {
+
+    public static ?MockHandler $mockHandler = null;
 
     /**
      * @var array|string[]
@@ -63,6 +66,14 @@ class Client
     }
 
     /**
+     * @return array
+     */
+    public function getConfigs(): array
+    {
+        return $this->configs;
+    }
+
+    /**
      * @author liuchangchen
      * @param $name
      * @return mixed
@@ -76,10 +87,9 @@ class Client
         if (isset($this->providers[$name])) {
             return $this->providers[$name];
         }
-
         $class = $this->alias[$name];
-        return $this->providers[$name] = $this->configs ?
-            new $class($this, $this->configs) :
+        return $this->providers[$name] = $this->getConfigs() ?
+            new $class($this, $this->getConfigs()) :
             new $class($this);
     }
 

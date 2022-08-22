@@ -28,7 +28,7 @@ class ConfigProvider extends AbstractProvider
     const DELETE_URL = 'nacos/v1/cs/configs';
     const DELETE_METHOD = 'DELETE';
 
-    const LISTENER_URL = '/nacos/v1/cs/configs/listener';
+    const LISTENER_URL = 'nacos/v1/cs/configs/listener';
     const LISTENER_METHOD = 'POST';
 
     /**
