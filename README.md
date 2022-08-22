@@ -6,11 +6,20 @@
 
 # A PHP implementation of Nacos OpenAPI for webman plugin
 
-[![Latest Stable Version](http://poser.pugx.org/workbunny/webman-nacos/v)](https://packagist.org/packages/workbunny/webman-nacos) 
-[![Total Downloads](http://poser.pugx.org/workbunny/webman-nacos/downloads)](https://packagist.org/packages/workbunny/webman-nacos) 
-[![Latest Unstable Version](http://poser.pugx.org/workbunny/webman-nacos/v/unstable)](https://packagist.org/packages/workbunny/webman-nacos) 
-[![License](http://poser.pugx.org/workbunny/webman-nacos/license)](https://packagist.org/packages/workbunny/webman-nacos) 
-[![PHP Version Require](http://poser.pugx.org/workbunny/webman-nacos/require/php)](https://packagist.org/packages/workbunny/webman-nacos)
+<div align="center">
+    <a href="https://github.com/workbunny/webman-nacos/actions">
+        <img src="https://github.com/workbunny/webman-nacos/actions/workflows/CI.yml/badge.svg" alt="Build Status">
+    </a>
+    <a href="https://github.com/workbunny/webman-nacos/releases">
+        <img alt="Latest Stable Version" src="http://poser.pugx.org/workbunny/webman-nacos/v">
+    </a>
+    <a href="https://github.com/workbunny/webman-nacos/blob/main/composer.json">
+        <img alt="PHP Version Require" src="http://poser.pugx.org/workbunny/webman-nacos/require/php">
+    </a>
+    <a href="https://github.com/workbunny/webman-nacos/blob/main/LICENSE">
+        <img alt="GitHub license" src="http://poser.pugx.org/workbunny/webman-nacos/license">
+    </a>
+</div>
 
 ## 常见问题
 
