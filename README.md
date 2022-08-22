@@ -12,9 +12,18 @@
 [![License](http://poser.pugx.org/workbunny/webman-nacos/license)](https://packagist.org/packages/workbunny/webman-nacos) 
 [![PHP Version Require](http://poser.pugx.org/workbunny/webman-nacos/require/php)](https://packagist.org/packages/workbunny/webman-nacos)
 
----
+## 常见问题
+
+1. 什么是Nacos？
+
+	**Nacos 致力于帮助您发现、配置和管理微服务；是微服务/SOA架构体系中服务治理环节的重要成员服务；简单的可以把Nacos理解为一个配置中心和一个服务注册中心。**
+
+2. 什么时候用Nacos？
+	- **当我们的服务越来越大、越来越复杂，需要配置的地方越来越多，配置存放的地方也越来越多的时候，为了可以方便统一管理配置，这时候就可以引入Nacos；**
+
+	- **当我们的服务越来越多，有些时候部署需要做到弹性伸缩，需要用到一些负载策略的时候，可以引入Nacos进行服务的治理；**
+
 ## 简介
-- **Nacos 致力于帮助您发现、配置和管理微服务；是微服务/SOA架构体系中服务治理环节的重要成员服务；**
 
 - **Webman-naocs是基于PHP开发的Webman插件生态下的Nacos客户端；**
 
@@ -181,3 +190,9 @@ $client->service;
 
 - 使用配置方式不必改变，使用webman的config()即可，降低封装组件的心智负担;
 
+
+## 其他
+- **[趣谈程序的演变过程](https://www.workerman.net/a/1341)**
+- **[Nacos在我司的应用及SOA初尝](https://www.workerman.net/a/1339)**
+- **[Nacos Open-API文档](https://nacos.io/zh-cn/docs/open-api.html)**
+- **[workbunny/webman-nacos 项目地址](https://github.com/workbunny/webman-nacos)**
