@@ -68,12 +68,14 @@ abstract class AbstractProvider
     public function __construct(NacosClient $client, ?array $config = null)
     {
         $this->client = $client;
-        $config = $this->client->getConfigs() ??
-            (
-                function_exists('config') ?
+        $config = empty($this->client->getConfigs())
+            ? (
+            function_exists('config') ?
                 config('plugin.workbunny.webman-nacos.app', $config) :
                 $config
-            );
+            )
+            : $this->client->getConfigs();
+
         isset($config['host']) && $this->host = (string) $config['host'];
         isset($config['port']) && $this->port = (int) $config['port'];
         isset($config['username']) && $this->username = (string) $config['username'];
@@ -206,7 +208,7 @@ abstract class AbstractProvider
                 'Connection' => 'keep-alive'
             ]);
             $this->httpClientAsync()->request(
-                sprintf('http://%s:%d%s?%s', $this->host, $this->port, $uri, $queryString),
+                sprintf('http://%s:%d/%s?%s', $this->host, $this->port, $uri, $queryString),
                 [
                     'method'    => $method,
                     'version'   => '1.1',
