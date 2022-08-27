@@ -92,7 +92,7 @@ class ConfigListenerProcess extends AbstractProcess
                                 }
                             }
                         },function (GuzzleException $exception){
-                            Log::channel('error')->error($exception->getMessage(), $exception->getTrace());
+                            $this->logger()->error($exception->getMessage(), $exception->getTrace());
                         });
                     }
                 }

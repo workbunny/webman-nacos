@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace Workbunny\WebmanNacos\Process;
 
 use Workbunny\WebmanNacos\Client as NacosClient;
+use Workbunny\WebmanNacos\Traits\Logger;
 use Workerman\Worker;
 
 abstract class AbstractProcess
 {
+    use Logger;
+
     /** @var NacosClient  */
     protected NacosClient $client;
 

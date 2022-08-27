@@ -87,7 +87,7 @@ class AsyncConfigListenerProcess extends AbstractProcess
                                 }
                             }
                         }, function (\Exception $exception){
-                            Log::channel('error')->error($exception->getMessage(), $exception->getTrace());
+                            $this->logger()->error($exception->getMessage(), $exception->getTrace());
                         });
                 });
             }
