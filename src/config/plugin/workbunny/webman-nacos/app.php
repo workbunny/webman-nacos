@@ -16,6 +16,13 @@ return [
     /** 长轮询间隔 秒 @desc 组件包主要使用该项作为监听器间隔，使用{该值 * 1000}作为长轮询等待时长 */
     'long_pulling_interval'  => 30,
 
+    /* 注册实例 beat 间隔，单位秒 */
+    'instance_beat_interval' => 5,
+    /** 注册实例 beat 失败最大次数，达到最大后会进入重新注册 */
+    'instance_beat_error_max_count' => 5,
+    /* 注册实例注册失败后重试间隔,单位秒 */
+    'instance_register_retry_interval' => 10,
+
     /**
      * 配置文件监听器
      * @desc 可在config/plugin/workbunny/webman-nacos/process.php中进行修改以下两种监听器
