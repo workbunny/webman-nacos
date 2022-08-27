@@ -57,15 +57,15 @@ class InstanceRegistrarProcess extends AbstractProcess
                                     $option['ephemeral'] ?? null
                                 )->then(function (ResponseInterface $response) {
                                     if($response->getStatusCode() !== 200){
-                                        Log::debug('nacos beat failed', [$response->getBody()->getContents()]);
+                                        $this->logger()->warning('nacos beat failed', [$response->getBody()->getContents()]);
                                     }
                                 }, function (GuzzleException $exception){
-                                    Log::channel('error')->error($exception->getMessage(),$exception->getTrace());
+                                    $this->logger()->error($exception->getMessage(),$exception->getTrace());
                                 })->wait();
                             });
                         }
                     }, function (GuzzleException $exception){
-                        Log::channel('error')->error($exception->getMessage(),$exception->getTrace());
+                        $this->logger()->error($exception->getMessage(),$exception->getTrace());
                     });
             }
             if($promises){
@@ -97,7 +97,7 @@ class InstanceRegistrarProcess extends AbstractProcess
                     );
                 }
             }catch (GuzzleException $exception){
-                Log::channel('error')->error($exception->getMessage(),$exception->getTrace());
+                $this->logger()->error($exception->getMessage(),$exception->getTrace());
             }
         }
 

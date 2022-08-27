@@ -2,6 +2,9 @@
 return [
     'enable' => true,
 
+    /** 日志 channel，为 null 时使用默认通道 */
+    'log_channel' => null, // 'error',
+
     'host' => '127.0.0.1',
     'port' => 8848,
     'username' => '',
