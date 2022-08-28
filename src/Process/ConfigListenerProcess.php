@@ -90,9 +90,21 @@ class ConfigListenerProcess extends AbstractProcess
                                 if($response->getBody()->getContents() !== ''){
                                     $this->_get($dataId, $group, $tenant, $configPath);
                                 }
+                            }else{
+                                $this->logger()->error(
+                                    "Nacos listener failed: [0] {$this->client->config->getMessage()}",
+                                    ['dataId' => $dataId, 'trace' => []]
+                                );
+                                sleep($this->retry_interval);
+                                Worker::stopAll(0);
                             }
-                        },function (GuzzleException $exception){
-                            $this->logger()->error($exception->getMessage(), $exception->getTrace());
+                        },function (GuzzleException $exception) use ($dataId){
+                            $this->logger()->error(
+                                "Nacos listener failed: [{$exception->getCode()}] {$exception->getMessage()}",
+                                ['dataId' => $dataId, 'trace' => $exception->getTrace()]
+                            );
+                            sleep($this->retry_interval);
+                            Worker::stopAll(0);
                         });
                     }
                 }

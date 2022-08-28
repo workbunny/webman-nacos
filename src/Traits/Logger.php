@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Workbunny\WebmanNacos\Traits;
 
@@ -7,9 +8,12 @@ use support\Log;
 
 trait Logger
 {
-    private ?string $logChannel = null;
+    protected ?string $logChannel = null;
 
-    protected function logger(): LoggerInterface
+    /**
+     * @return LoggerInterface
+     */
+    public function logger(): LoggerInterface
     {
         if ($this->logChannel === null) {
             $this->logChannel = config('plugin.workbunny.webman-nacos.app.log_channel', 'default');
