@@ -32,7 +32,7 @@ use Workbunny\WebmanNacos\Provider\AuthProvider;
  */
 class Client
 {
-
+    /** @var MockHandler|null  */
     public static ?MockHandler $mockHandler = null;
 
     /**
@@ -53,6 +53,24 @@ class Client
     protected array $providers = [];
 
     /**
+     * @var Client[]
+     */
+    protected static array $clients = [];
+
+    /**
+     * @param string $key
+     * @return Client
+     */
+    public static function channel(string $key = 'default'): Client
+    {
+        $channel = config('plugin.workbunny.webman-nacos.channel', []);
+        if(!isset($channel[$key])){
+            throw new NacosException("Channel config $key is invalid.");
+        }
+        return self::$clients[$key] ?? (self::$clients[$key] = new static($channel[$key]));
+    }
+
+    /**
      * NacosClient constructor.
      * @param array|null $config = [
      *  'host' => '',
@@ -61,7 +79,8 @@ class Client
      *  'password' => ''
      * ]
      */
-    public function __construct(?array $config = null){
+    public function __construct(?array $config = null)
+    {
         $this->configs = $config ?? [];
     }
 

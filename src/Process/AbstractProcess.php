@@ -20,7 +20,7 @@ abstract class AbstractProcess
     public function __construct()
     {
         $this->client = new NacosClient();
-        $this->retry_interval = config('plugin.workbunny.webman-nacos.app.process_retry_interval', 5);
+        $this->retry_interval = (int)config('plugin.workbunny.webman-nacos.app.process_retry_interval', 5);
     }
 
     /**

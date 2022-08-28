@@ -70,11 +70,10 @@ abstract class AbstractProvider
         $this->client = $client;
         $config = empty($this->client->getConfigs())
             ? (
-            function_exists('config') ?
+                function_exists('config') ?
                 config('plugin.workbunny.webman-nacos.app', $config) :
                 $config
-            )
-            : $this->client->getConfigs();
+            ) : $this->client->getConfigs();
 
         isset($config['host']) && $this->host = (string) $config['host'];
         isset($config['port']) && $this->port = (int) $config['port'];

@@ -92,7 +92,7 @@ class ConfigListenerProcess extends AbstractProcess
                                 }
                             }else{
                                 $this->logger()->error(
-                                    "Nacos listener failed: [0] {$this->client->config->getMessage()}",
+                                    "Nacos listener failed: [0] {$this->client->config->getMessage()}.",
                                     ['dataId' => $dataId, 'trace' => []]
                                 );
                                 sleep($this->retry_interval);
@@ -100,7 +100,7 @@ class ConfigListenerProcess extends AbstractProcess
                             }
                         },function (GuzzleException $exception) use ($dataId){
                             $this->logger()->error(
-                                "Nacos listener failed: [{$exception->getCode()}] {$exception->getMessage()}",
+                                "Nacos listener failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                                 ['dataId' => $dataId, 'trace' => $exception->getTrace()]
                             );
                             sleep($this->retry_interval);

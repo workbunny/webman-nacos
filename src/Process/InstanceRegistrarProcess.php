@@ -36,7 +36,7 @@ class InstanceRegistrarProcess extends AbstractProcess
     public function __construct()
     {
         parent::__construct();
-        $this->heartbeat = config('plugin.workbunny.webman-nacos.app.instance_heartbeat', 5);
+        $this->heartbeat = (float)config('plugin.workbunny.webman-nacos.app.instance_heartbeat', 5.0);
     }
 
     /**
@@ -62,7 +62,7 @@ class InstanceRegistrarProcess extends AbstractProcess
                         $option['ephemeral'] ?? null
                     )){
                         $this->logger()->error(
-                            "Nacos instance heartbeat failed: [0] {$this->client->instance->getMessage()}",
+                            "Nacos instance heartbeat failed: [0] {$this->client->instance->getMessage()}.",
                             ['name' => $name, 'trace' => []]
                         );
                         sleep($this->retry_interval);
@@ -70,7 +70,7 @@ class InstanceRegistrarProcess extends AbstractProcess
                     }
                 }catch (GuzzleException $exception){
                     $this->logger()->error(
-                        "Nacos instance heartbeat failed: [{$exception->getCode()}] {$exception->getMessage()}",
+                        "Nacos instance heartbeat failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                         ['name' => $name, 'trace' => $exception->getTrace()]
                     );
                     sleep($this->retry_interval);
@@ -100,7 +100,7 @@ class InstanceRegistrarProcess extends AbstractProcess
                                 $this->_heartbeat($name);
                             }else{
                                 $this->logger()->error(
-                                    "Naocs instance register failed: [0] {$this->client->instance->getMessage()}",
+                                    "Naocs instance register failed: [0] {$this->client->instance->getMessage()}.",
                                     ['name' => $name, 'trace' => []]
                                 );
 
@@ -109,7 +109,7 @@ class InstanceRegistrarProcess extends AbstractProcess
                             }
                         }, function (\Exception $exception) use ($instanceRegistrar, $name) {
                             $this->logger()->error(
-                                "Nacos instance register failed: [{$exception->getCode()}] {$exception->getMessage()}",
+                                "Nacos instance register failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                                 ['name' => $name, 'trace' => $exception->getTrace()]
                             );
 
@@ -122,7 +122,7 @@ class InstanceRegistrarProcess extends AbstractProcess
 
         }catch (GuzzleException $exception) {
             $this->logger()->error(
-                "Nacos instance register failed: [{$exception->getCode()}] {$exception->getMessage()}",
+                "Nacos instance register failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                 ['name' => '#base', 'trace' => $exception->getTrace()]
             );
 
@@ -155,14 +155,14 @@ class InstanceRegistrarProcess extends AbstractProcess
                     ]
                 )){
                     $this->logger()->error(
-                        "Naocs instance delete failed: [0] {$this->client->instance->getMessage()}",
+                        "Naocs instance delete failed: [0] {$this->client->instance->getMessage()}.",
                         ['name' => $name, 'trace' => []]
                     );
                 }
             }
         } catch (GuzzleException $exception) {
             $this->logger()->error(
-                "Nacos instance delete failed: [{$exception->getCode()}] {$exception->getMessage()}",
+                "Nacos instance delete failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                 ['name' => '#base', 'trace' => $exception->getTrace()]
             );
         }

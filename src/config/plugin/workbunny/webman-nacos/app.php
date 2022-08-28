@@ -2,9 +2,6 @@
 return [
     'enable' => true,
 
-    /** 日志 channel，为 null 时使用默认通道 */
-    'log_channel' => null, // 'error',
-
     'host' => '127.0.0.1',
     'port' => 8848,
     'username' => '',
@@ -16,11 +13,14 @@ return [
     /** 长轮询间隔 秒 @desc 组件包主要使用该项作为监听器间隔，使用{该值 * 1000}作为长轮询等待时长 */
     'long_pulling_interval'  => 30,
 
-    /** 实例心跳间隔 秒 */
-    'instance_heartbeat' => 5,
+    /** float 实例心跳间隔 秒 */
+    'instance_heartbeat' => 5.0,
 
-    /** 进程重试间隔 秒 */
+    /** int 进程重试间隔 秒 */
     'process_retry_interval' => 5,
+
+    /** 日志 channel，为 null 时使用默认通道 */
+    'log_channel' => null, // 'error',
 
     /**
      * 配置文件监听器

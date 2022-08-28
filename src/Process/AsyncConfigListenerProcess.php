@@ -87,7 +87,7 @@ class AsyncConfigListenerProcess extends AbstractProcess
                                 }
                             }else{
                                 $this->logger()->error(
-                                    "Nacos listener failed: [0] {$this->client->config->getMessage()}",
+                                    "Nacos listener failed: [0] {$this->client->config->getMessage()}.",
                                     ['dataId' => $dataId, 'trace' => []]
                                 );
 
@@ -96,7 +96,7 @@ class AsyncConfigListenerProcess extends AbstractProcess
                             }
                         }, function (\Exception $exception) use($dataId) {
                             $this->logger()->error(
-                                "Nacos listener failed: [{$exception->getCode()}] {$exception->getMessage()}",
+                                "Nacos listener failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                                 ['dataId' => $dataId, 'trace' => $exception->getTrace()]
                             );
 

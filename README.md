@@ -21,6 +21,10 @@
     </a>
 </div>
 
+## Naocs插件问答帖
+
+[https://www.workerman.net/q/9134](https://www.workerman.net/q/9134)
+
 ## 常见问题
 
 1. 什么是Nacos？
