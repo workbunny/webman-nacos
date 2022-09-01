@@ -114,7 +114,7 @@ webman-nacos组件默认会启动一个名为 **config-listener** 的进程，�
 
 如果想自行掌控调用，可以使用如下服务：
 ```php
-$client = new Workbunny\WebmanNacos\Client();
+$client = \Workbunny\WebmanNacos\Client::channel();
 
 // 异步非阻塞监听
 // 注：在webman中是异步非阻塞的，不会阻塞当前进程
@@ -132,7 +132,7 @@ $response = $client->config->listener();
 - 获取配置
 
 ```php
-$client = new Workbunny\WebmanNacos\Client();
+$client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->config->get('database', 'DEFAULT_GROUP');
 if (false === $response) {
     var_dump($nacos->config->getMessage());
@@ -142,7 +142,7 @@ if (false === $response) {
 - 提交配置
 
 ```php
-$client = new Workbunny\WebmanNacos\Client();
+$client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->config->publish('database', 'DEFAULT_GROUP', file_get_contents('.env'));
 if (false === $response) {
     var_dump($nacos->config->getMessage());
@@ -152,7 +152,7 @@ if (false === $response) {
 - 移除配置
 
 ```php
-$client = new Workbunny\WebmanNacos\Client();
+$client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->config->delete('database', 'DEFAULT_GROUP');;
 if (false === $response) {
     var_dump($nacos->config->getMessage());
@@ -170,7 +170,7 @@ webman-nacos组件默认会启动一个名为 **instance-registrar** 的进程�
 如需动态注册实例，请使用：
 
 ```php
-$client = new Workbunny\WebmanNacos\Client();
+$client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->instance->register('127.0.0.1', 8848, '猜猜我是谁', [
     'groupName' => 'DEFAULT_GROUP',
 ]);
@@ -182,7 +182,7 @@ if (false === $response) {
 - 移除实例
 
 ```php
-$client = new Workbunny\WebmanNacos\Client();
+$client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->instance->delete('猜猜我是谁', 'DEFAULT_GROUP', '127.0.0.1', 8848, []);
 if (false === $response) {
     var_dump($nacos->config->getMessage());
@@ -192,7 +192,7 @@ if (false === $response) {
 - 实例列表
 
 ```php
-$client = new Workbunny\WebmanNacos\Client();
+$client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->instance->list('猜猜我是谁', []);
 if (false === $response) {
     var_dump($nacos->config->getMessage());
@@ -210,7 +210,7 @@ if (false === $response) {
 - **后缀为AsyncUseEventLoop的方法是workerman/http-client异步请求，在当前业务周期中非阻塞；**
 
 ```php
-$client = new Workbunny\WebmanNacos\Client();
+$client = \Workbunny\WebmanNacos\Client::channel();
 
 # 配置相关接口
 $client->config;
