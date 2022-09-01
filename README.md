@@ -59,6 +59,51 @@ composer require workbunny/webman-nacos
 
 ### 2. 服务的使用
 
+1. 创建连接通道
+```php
+// 使用默认通道【建议使用】
+$client = \Workbunny\WebmanNacos\Client::channel();
+// 使用channel.php中键名为ABC的连接配置
+$client = \Workbunny\WebmanNacos\Client::channel('ABC');
+```
+**注：该方案默认使用channel.php中的连接配置，支持多通道连接，建议使用！**
+
+**注：获取一个不存在的配置信息时，会抛出一个 NacosException 异常。**
+
+```php
+// 旧版保留方式【不建议使用】
+$client = new Workbunny\WebmanNacos\Client();
+```
+**注：该方案默认使用app.php中的连接配置，后续会将其移除，不建议继续使用！**
+
+2. 以监听配置举例
+```php
+   
+$client = \Workbunny\WebmanNacos\Client::channel();
+// 异步非阻塞监听
+// 注：在webman中是异步非阻塞的，不会阻塞当前进程
+$response = $client->config->listenerAsyncUseEventLoop();
+// 异步阻塞监听
+// 注：在webman中是异步阻塞的，返回的是Guzzle/PromiseInterface，配合wait()可以多条请求并行执行；
+//     请求会阻塞在 **wait()** 直到执行完毕；详见 **ConfigListernerProcess.php** 
+$response = $client->config->listenerAsync();
+// 同步阻塞监听
+$response = $client->config->listener();
+```
+
+3. 断开连接
+```php
+$client = \Workbunny\WebmanNacos\Client::channel();
+$client->cancel();
+```
+
+#### 配置说明：
+
+1. app.php 为基础配置；
+2. channel.php 为连接通道配置；
+3. process.php 为默认启动进程配置；
+
+### 3. Nacos相关服务
 #### 配置相关：
 
 - 监听配置 

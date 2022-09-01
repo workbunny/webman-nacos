@@ -35,6 +35,9 @@ class Client
     /** @var MockHandler|null  */
     public static ?MockHandler $mockHandler = null;
 
+    /** @var string|null Channel Name */
+    protected ?string $name = null;
+
     /**
      * @var array|string[]
      */
@@ -58,16 +61,26 @@ class Client
     protected static array $clients = [];
 
     /**
-     * @param string $key
+     * @param string $name
      * @return Client
      */
-    public static function channel(string $key = 'default'): Client
+    public static function channel(string $name = 'default'): Client
     {
         $channel = config('plugin.workbunny.webman-nacos.channel', []);
-        if(!isset($channel[$key])){
-            throw new NacosException("Channel config $key is invalid.");
+        if(empty($config = $channel[$name] ?? [])){
+            throw new NacosException("Channel config $name is invalid.");
         }
-        return self::$clients[$key] ?? (self::$clients[$key] = new static($channel[$key]));
+        return self::$clients[$name] ?? (self::$clients[$name] = new static($config));
+    }
+
+    /**
+     * @return void
+     */
+    public function cancel(): void
+    {
+        if($name = $this->getName() and isset(self::$clients[$name])){
+            unset(self::$clients[$name]);
+        }
     }
 
     /**
@@ -90,6 +103,14 @@ class Client
     public function getConfigs(): array
     {
         return $this->configs;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 
     /**
