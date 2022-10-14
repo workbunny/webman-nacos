@@ -11,13 +11,13 @@
         <img src="https://github.com/workbunny/webman-nacos/actions/workflows/CI.yml/badge.svg" alt="Build Status">
     </a>
     <a href="https://github.com/workbunny/webman-nacos/releases">
-        <img alt="Latest Stable Version" src="http://poser.pugx.org/workbunny/webman-nacos/v">
+        <img alt="Latest Stable Version" src="https://badgen.net/packagist/v/workbunny/webman-nacos/latest">
     </a>
     <a href="https://github.com/workbunny/webman-nacos/blob/main/composer.json">
-        <img alt="PHP Version Require" src="http://poser.pugx.org/workbunny/webman-nacos/require/php">
+        <img alt="PHP Version Require" src="https://badgen.net/packagist/php/workbunny/webman-nacos">
     </a>
     <a href="https://github.com/workbunny/webman-nacos/blob/main/LICENSE">
-        <img alt="GitHub license" src="http://poser.pugx.org/workbunny/webman-nacos/license">
+        <img alt="GitHub license" src="https://badgen.net/packagist/license/workbunny/webman-nacos">
     </a>
 </div>
 
