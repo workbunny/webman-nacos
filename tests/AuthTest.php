@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
@@ -11,7 +12,7 @@ class AuthTest extends AbstractTest
     /**
      * @covers \Workbunny\WebmanNacos\Provider\AuthProvider::login
      * @return void
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function testAuthLogin()
     {

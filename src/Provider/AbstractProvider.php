@@ -4,8 +4,8 @@
  *
  * Redistributions of files must retain the above copyright notice.
  *
- * @author    chaz6chez<250220719@qq.com>
- * @copyright chaz6chez<250220719@qq.com>
+ * @author    chaz6chez<chaz6chez1993@outlook.com>
+ * @copyright chaz6chez<chaz6chez1993@outlook.com>
  * @link      https://github.com/workbunny/webman-nacos
  * @license   https://github.com/workbunny/webman-nacos/blob/main/LICENSE
  */
@@ -25,6 +25,7 @@ use Workbunny\WebmanNacos\Traits\ErrorMsg;
 use Workbunny\WebmanNacos\Client as NacosClient;
 use Workerman\Http\Client as AsyncClient;
 use Workerman\Http\Response;
+use function Workbunny\WebmanNacos\config;
 
 /**
  * Class AbstractProvider
@@ -69,12 +70,8 @@ abstract class AbstractProvider
     {
         $this->client = $client;
         $config = empty($this->client->getConfigs())
-            ? (
-                function_exists('config') ?
-                config('plugin.workbunny.webman-nacos.app', $config) :
-                $config
-            ) : $this->client->getConfigs();
-
+            ? config('plugin.workbunny.webman-nacos.app', $config)
+            : $this->client->getConfigs();
         isset($config['host']) && $this->host = (string) $config['host'];
         isset($config['port']) && $this->port = (int) $config['port'];
         isset($config['username']) && $this->username = (string) $config['username'];

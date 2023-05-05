@@ -8,10 +8,11 @@ on:
 jobs:
   PHPUnit:
     name: PHPUnit (PHP ${{ matrix.php }})
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         php:
+          - 8.2
           - 8.1
           - 8.0
           - 7.4
@@ -21,7 +22,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: event
-          tools: phpunit:9.5, composer:v2
+          tools: phpunit:9, composer:v2
           coverage: none
       - run: composer install
-      - run: vendor/bin/phpunit tests
+      - run: vendor/bin/phpunit

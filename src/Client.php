@@ -4,8 +4,8 @@
  *
  * Redistributions of files must retain the above copyright notice.
  *
- * @author    chaz6chez<250220719@qq.com>
- * @copyright chaz6chez<250220719@qq.com>
+ * @author    chaz6chez<chaz6chez1993@outlook.com>
+ * @copyright chaz6chez<chaz6chez1993@outlook.com>
  * @link      https://github.com/workbunny/webman-nacos
  * @license   https://github.com/workbunny/webman-nacos/blob/main/LICENSE
  */
@@ -20,6 +20,7 @@ use Workbunny\WebmanNacos\Provider\InstanceProvider;
 use Workbunny\WebmanNacos\Provider\OperatorProvider;
 use Workbunny\WebmanNacos\Provider\ServiceProvider;
 use Workbunny\WebmanNacos\Provider\AuthProvider;
+use function Workbunny\WebmanNacos\config;
 
 /**
  * Class NacosClient
@@ -34,6 +35,8 @@ class Client
 {
     /** @var MockHandler|null  */
     public static ?MockHandler $mockHandler = null;
+    /** @var bool debug mode */
+    public static bool $debug = false;
 
     /** @var string|null Channel Name */
     protected ?string $name = null;
