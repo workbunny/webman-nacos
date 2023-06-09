@@ -569,7 +569,8 @@ class InstanceProvider extends AbstractProvider
         ?string $groupName = null,
         ?string $namespaceId = null,
         ?bool $ephemeral = null,
-        bool $lightBeatEnabled = false
+        bool $lightBeatEnabled = false,
+        float $timeout = 5.0
     )
     {
         return $this->request(self::BEAT_METHOD, self::BEAT_URL, [
@@ -582,6 +583,7 @@ class InstanceProvider extends AbstractProvider
                 'ephemeral' => $ephemeral,
                 'beat' => ! $lightBeatEnabled ? json_encode($beat) : '',
             ]),
+            RequestOptions::TIMEOUT => $timeout,
         ]);
     }
 
@@ -607,7 +609,8 @@ class InstanceProvider extends AbstractProvider
         ?string $groupName = null,
         ?string $namespaceId = null,
         ?bool $ephemeral = null,
-        bool $lightBeatEnabled = false
+        bool $lightBeatEnabled = false,
+        float $timeout = 5.0
     )
     {
         return $this->requestAsync(self::BEAT_METHOD, self::BEAT_URL, [
@@ -620,6 +623,7 @@ class InstanceProvider extends AbstractProvider
                 'ephemeral' => $ephemeral,
                 'beat' => ! $lightBeatEnabled ? json_encode($beat) : '',
             ]),
+            RequestOptions::TIMEOUT => $timeout,
         ]);
     }
 
@@ -651,6 +655,7 @@ class InstanceProvider extends AbstractProvider
             ['groupName', 'is_string', false],
             ['namespaceId', 'is_string', false],
             ['ephemeral', 'is_bool', false],
+            ['timeout', 'is_float', false],
         ]);
         return $this->requestAsync(self::BEAT_METHOD, self::BEAT_URL, [
             RequestOptions::QUERY => $this->filter([
@@ -662,6 +667,7 @@ class InstanceProvider extends AbstractProvider
                 'ephemeral' => $options['ephemeral'] ?? null,
                 'beat' => ! $lightBeatEnabled ? json_encode($options['beat'] ?? []) : '',
             ]),
+            RequestOptions::TIMEOUT => $options['timeout'] ?? 5.0,
             OPTIONS_SUCCESS => $success,
             OPTIONS_ERROR => $error
         ]);

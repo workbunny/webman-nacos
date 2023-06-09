@@ -59,7 +59,9 @@ class InstanceRegistrarProcess extends AbstractProcess
                         ],
                         $option['groupName'] ?? null,
                         $option['namespaceId'] ?? null,
-                        $option['ephemeral'] ?? null
+                        $option['ephemeral'] ?? null,
+                        false,
+                        $this->heartbeat
                     )){
                         $this->logger()->error(
                             "Nacos instance heartbeat failed: [0] {$this->client->instance->getMessage()}.",
