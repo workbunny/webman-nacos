@@ -52,11 +52,13 @@ class InstanceRegistrarProcess extends AbstractProcess
                 try {
                     if(!$this->client->instance->beat(
                         $serviceName,
-                        [
+                        array_filter([
                             'ip' => $ip,
                             'port' => $port,
                             'serviceName' => $serviceName,
-                        ],
+                            'weight' => $option['weight'] ?? null,
+                            'cluster' => $option['cluster'] ?? null,
+                        ], fn($value) => $value !== null),
                         $option['groupName'] ?? null,
                         $option['namespaceId'] ?? null,
                         $option['ephemeral'] ?? null
