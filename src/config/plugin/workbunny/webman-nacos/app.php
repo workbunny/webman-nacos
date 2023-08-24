@@ -66,7 +66,7 @@ return [
                 'groupName' => 'DEFAULT_GROUP',
                 'namespaceId' => '',
                 'enabled' => true,
-                'ephemeral' => false
+                'ephemeral' => 'false'
             ],
         ],
         # 以下可以新增多个数组
