@@ -67,15 +67,15 @@ $client = \Workbunny\WebmanNacos\Client::channel();
 // 使用channel.php中键名为ABC的连接配置
 $client = \Workbunny\WebmanNacos\Client::channel('ABC');
 ```
-**注：该方案默认使用channel.php中的连接配置，支持多通道连接，建议使用！**
+> **注：该方案默认使用channel.php中的连接配置，支持多通道连接，建议使用！**
 
-**注：获取一个不存在的配置信息时，会抛出一个 NacosException 异常。**
+> **注：获取一个不存在的配置信息时，会抛出一个 NacosException 异常。**
 
 ```php
 // 旧版保留方式【不建议使用】
 $client = new Workbunny\WebmanNacos\Client();
 ```
-**注：该方案默认使用app.php中的连接配置，后续会将其移除，不建议继续使用！**
+> **注：该方案默认使用app.php中的连接配置，后续会将其移除，不建议继续使用！**
 
 2. 以监听配置举例
 ```php
@@ -105,7 +105,7 @@ $client->cancel();
 3. process.php 为默认启动进程配置；
 
 ### 3. Nacos相关服务
-#### 配置相关：
+#### 配置相关
 
 - 监听配置 
 
@@ -135,6 +135,8 @@ $response = $client->config->listener();
 ```php
 $client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->config->get('database', 'DEFAULT_GROUP');
+// 获取有命名空间的配置文件，第三个参数填写对应的命名空间
+$response = $client->config->get('database', 'DEFAULT_GROUP', 'b34ea59f-e240-413b-ba3d-bb040981d773');
 if (false === $response) {
     var_dump($nacos->config->getMessage());
 }
