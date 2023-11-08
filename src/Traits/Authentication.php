@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Workbunny\WebmanNacos\Traits;
 
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\RequestOptions;
 
 /**
  * Trait Authentication
@@ -33,17 +34,17 @@ trait Authentication
 
     /**
      * 获取token
-     * @return string|null
+     * @return void
      * @throws GuzzleException
      */
-    public function issueToken(): ?string
+    public function issueToken(array &$options = [])
     {
         if ($this->username === null || $this->password === null) {
-            return null;
+            $this->mseAuth($options);
+            return;
         }
-
         if (!$this->isExpired()) {
-            return $this->accessToken;
+            return;
         }
 
         $result = $this->handleResponse(
@@ -52,8 +53,7 @@ trait Authentication
 
         $this->accessToken = $result['accessToken'];
         $this->expireTime = $result['tokenTtl'] + time();
-
-        return $this->accessToken;
+        $options[RequestOptions::QUERY]['accessToken'] = $this->accessToken;
     }
 
     /**
@@ -66,5 +66,62 @@ trait Authentication
             return false;
         }
         return true;
+    }
+
+    /**
+     * 阿里云微服务引擎MSE鉴权
+     * @param array $options
+     * @return void
+     */
+    protected function mseAuth(array &$options = [])
+    {
+        if ($this->accessKeyId === null || $this->accessKeySecret === null) {
+            return;
+        }
+
+        $paramsToSign = $options[RequestOptions::QUERY] ?? $options[RequestOptions::FORM_PARAMS] ?? [];
+
+        $signStr = '';
+        $millisecondTs = (int)(microtime(true) * 1000);
+
+
+        // config signature
+        if (isset($paramsToSign['tenant'])&&$paramsToSign['tenant']) {
+            $signStr .= $paramsToSign['tenant'] . '+';
+        }
+        if (isset($paramsToSign['group'])&&$paramsToSign['group']) {
+            $signStr .= $paramsToSign['group'] . '+';
+        }
+        $signStr .= $millisecondTs;
+
+
+        // naming signature
+        if (isset($paramsToSign['serviceName'])) {
+            $signStr = $millisecondTs;
+            if (mb_strpos($paramsToSign['serviceName'], '@@') !== false
+                || !isset($paramsToSign['groupName'])
+                || $paramsToSign['groupName'] == '') {
+                $signStr .= '@@' . $paramsToSign['serviceName'];
+            } else {
+                $signStr .= '@@' . $paramsToSign['groupName'] . '@@' . $paramsToSign['serviceName'];
+            }
+        }
+
+        // 签名
+        $signature = base64_encode(hash_hmac('sha1', $signStr, $this->accessKeySecret, true));
+
+        // config增加header
+        $options[RequestOptions::HEADERS] = [
+                'timeStamp' => $millisecondTs,
+                'Spas-AccessKey' => $this->accessKeyId,
+                'Spas-Signature' => $signature,
+            ] + ($options[RequestOptions::HEADERS] ?? []);
+
+        // naming增加query
+        $options[RequestOptions::QUERY] = [
+                'data' => $signStr,
+                'ak' => $this->accessKeyId,
+                'signature' => $signature,
+            ] + ($options[RequestOptions::QUERY] ?? []);
     }
 }

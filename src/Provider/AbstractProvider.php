@@ -61,6 +61,12 @@ abstract class AbstractProvider
     /** @var string|null  */
     protected ?string $password = null;
 
+    /** @var string|null  */
+    protected ?string $accessKeyId = null;
+
+    /** @var string|null  */
+    protected ?string $accessKeySecret = null;
+
     /**
      * AbstractProvider constructor.
      * @param NacosClient $client
@@ -76,6 +82,8 @@ abstract class AbstractProvider
         isset($config['port']) && $this->port = (int) $config['port'];
         isset($config['username']) && $this->username = (string) $config['username'];
         isset($config['password']) && $this->password = (string) $config['password'];
+        isset($config['access_key_id']) && $this->accessKeyId = (string) $config['access_key_id'];
+        isset($config['access_key_secret']) && $this->accessKeySecret = (string) $config['access_key_secret'];
     }
 
     /**
@@ -138,9 +146,7 @@ abstract class AbstractProvider
     public function request(string $method, string $uri, array $options = [])
     {
         try {
-            if($token = $this->issueToken()){
-                $options[RequestOptions::QUERY]['accessToken'] = $token;
-            }
+            $this->issueToken($options);
             $response = $this->httpClient()->request($method, $uri, $options);
         } catch (RequestException $exception) {
             if ($exception->hasResponse()) {
@@ -164,9 +170,7 @@ abstract class AbstractProvider
     public function requestAsync(string $method, string $uri, array $options = [])
     {
         try {
-            if($token = $this->issueToken()){
-                $options[RequestOptions::QUERY]['accessToken'] = $token;
-            }
+            $this->issueToken($options);
             return $this->httpClient()->requestAsync($method, $uri, $options);
         } catch (RequestException $exception) {
             if ($exception->hasResponse()) {
@@ -196,9 +200,7 @@ abstract class AbstractProvider
     {
         try {
             # 同步阻塞获取token
-            if($token = $this->issueToken()){
-                $options[RequestOptions::QUERY]['accessToken'] = $token;
-            }
+            $this->issueToken($options);
             $queryString = http_build_query($options[RequestOptions::QUERY] ?? []);
             $headers = array_merge($options[RequestOptions::HEADERS] ?? [], [
                 'Connection' => 'keep-alive'
