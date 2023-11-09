@@ -1,5 +1,5 @@
 {
-  "name": "srako/webman-nacos",
+  "name": "workbunny/webman-nacos",
   "type": "library",
   "license": "MIT",
   "description": "Webman plugin workbunny/webman-nacos",
@@ -11,8 +11,8 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/srako/webman-nacos/issues",
-    "source": "https://github.com/srako/webman-nacos"
+    "issues": "https://github.com/workbunny/webman-nacos/issues",
+    "source": "https://github.com/workbunny/webman-nacos"
   },
   "require": {
     "php": ">=7.4",
