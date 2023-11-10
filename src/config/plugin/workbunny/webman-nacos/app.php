@@ -4,8 +4,12 @@ return [
 
     'host' => '127.0.0.1',
     'port' => 8848,
-    'username' => '',
-    'password' => '',
+    'username' => null,
+    'password' => null,
+
+    // 阿里云微服务引擎MSE
+    'access_key_id' => null,
+    'access_key_secret' => null,
 
     /** 长轮询等待时长 毫秒 @desc 当长轮询间隔不存在时，该项作为默认值使用，其余时间则不生效 */
     'long_pulling_timeout'  => 30000,
