@@ -51,6 +51,13 @@ class AsyncConfigListenerProcess extends AbstractProcess
     protected function _get(string $dataId, string $group, string $tenant, string $path)
     {
         $res = $this->client->config->get($dataId, $group, $tenant);
+        if (false === $res){
+            $this->logger()->error(
+                "Nacos listener failed: [1] {$this->client->config->getMessage()}.",
+                ['dataId' => $dataId, 'trace' => []]
+            );
+            return;
+        }
         if(file_put_contents($path, $res, LOCK_EX)){
             reload($path);
         }
