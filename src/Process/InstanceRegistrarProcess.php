@@ -47,16 +47,13 @@ class InstanceRegistrarProcess extends AbstractProcess
     protected function _heartbeat(string $name): void
     {
         if (isset($this->instanceRegistrars[$name])) {
+            list($serviceName, $ip, $port, $option) = $this->instanceRegistrars[$name];
             if (isset($option['ephemeral'])) {
                 $option['ephemeral'] = (is_string($option['ephemeral']) ? filter_var($option['ephemeral'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $option['ephemeral'] );
             }
             // 仅对非永久实例进行心跳
             if ($option['ephemeral'] ?? false) {
-                $this->heartbeatTimers[$name] = Timer::add($this->heartbeat, function () use ($name) {
-                    list($serviceName, $ip, $port, $option) = $this->instanceRegistrars[$name];
-                    if (isset($option['ephemeral'])) {
-                        $option['ephemeral'] = (is_string($option['ephemeral']) ? filter_var($option['ephemeral'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $option['ephemeral'] );
-                    }
+                $this->heartbeatTimers[$name] = Timer::add($this->heartbeat, function () use ($name, $serviceName, $ip, $port, $option) {
                     try {
                         if(!$this->client->instance->beat(
                             $serviceName,
