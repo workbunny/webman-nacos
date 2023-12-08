@@ -150,8 +150,11 @@ abstract class AbstractProvider
             $response = $this->httpClient()->request($method, $uri, $options);
         } catch (RequestException $exception) {
             if ($exception->hasResponse()) {
-                if (200 != $exception->getResponse()->getStatusCode()) {
-                    return $this->setError(false, $exception->getResponse()->getBody()->getContents());
+                if (200 != $statusCode = $exception->getResponse()->getStatusCode()) {
+                    return $this->setError(
+                        false,
+                        "[$statusCode] : " . $exception->getResponse()->getBody()->getContents()
+                    );
                 }
             }
             return $this->setError(false, 'server notice：' . $exception->getMessage());

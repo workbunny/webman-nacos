@@ -46,44 +46,47 @@ class InstanceRegistrarProcess extends AbstractProcess
      */
     protected function _heartbeat(string $name): void
     {
-        if(isset($this->instanceRegistrars[$name])){
-            $this->heartbeatTimers[$name] = Timer::add($this->heartbeat, function () use ($name) {
-                list($serviceName, $ip, $port, $option) = $this->instanceRegistrars[$name];
-                if (isset($option['ephemeral'])) {
-                    $option['ephemeral'] = (is_string($option['ephemeral']) ? filter_var($option['ephemeral'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $option['ephemeral'] );
-                }
-                try {
-                    if(!$this->client->instance->beat(
-                        $serviceName,
-                        array_filter([
-                            'ip' => $ip,
-                            'port' => $port,
-                            'serviceName' => $serviceName,
-                            'weight' => $option['weight'] ?? null,
-                            'cluster' => $option['cluster'] ?? null,
-                        ], fn($value) => $value !== null),
-                        $option['groupName'] ?? null,
-                        $option['namespaceId'] ?? null,
-                        $option['ephemeral'] ?? null,
-                        false,
-                        $this->heartbeat
-                    )){
+        if (isset($this->instanceRegistrars[$name])) {
+            if (isset($option['ephemeral'])) {
+                $option['ephemeral'] = (is_string($option['ephemeral']) ? filter_var($option['ephemeral'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $option['ephemeral'] );
+            }
+            // 仅对非永久实例进行心跳
+            if (!($option['ephemeral'] ?? false)) {
+                $this->heartbeatTimers[$name] = Timer::add($this->heartbeat, function () use ($name) {
+                    list($serviceName, $ip, $port, $option) = $this->instanceRegistrars[$name];
+
+                    try {
+                        if(!$this->client->instance->beat(
+                            $serviceName,
+                            array_filter([
+                                    'ip' => $ip,
+                                    'port' => $port,
+                                    'serviceName' => $serviceName,
+                                ] + $option, fn($value) => $value !== null),
+                            $option['groupName'] ?? null,
+                            $option['namespaceId'] ?? null,
+                            $option['ephemeral'] ?? null,
+                            false,
+                            $this->heartbeat
+                        )){
+                            $this->logger()->error(
+                                "Nacos instance heartbeat failed: [0] {$this->client->instance->getMessage()}.",
+                                ['name' => $name, 'trace' => []]
+                            );
+                            sleep($this->retry_interval);
+                            Worker::stopAll(0);
+                        }
+                    } catch (GuzzleException $exception){
                         $this->logger()->error(
-                            "Nacos instance heartbeat failed: [0] {$this->client->instance->getMessage()}.",
-                            ['name' => $name, 'trace' => []]
+                            "Nacos instance heartbeat failed: [{$exception->getCode()}] {$exception->getMessage()}.",
+                            ['name' => $name, 'trace' => $exception->getTrace()]
                         );
                         sleep($this->retry_interval);
                         Worker::stopAll(0);
                     }
-                }catch (GuzzleException $exception){
-                    $this->logger()->error(
-                        "Nacos instance heartbeat failed: [{$exception->getCode()}] {$exception->getMessage()}.",
-                        ['name' => $name, 'trace' => $exception->getTrace()]
-                    );
-                    sleep($this->retry_interval);
-                    Worker::stopAll(0);
-                }
-            });
+                });
+            }
+
         }
     }
 
@@ -127,7 +130,7 @@ class InstanceRegistrarProcess extends AbstractProcess
                 Utils::settle($promises)->wait();
             }
 
-        }catch (GuzzleException $exception) {
+        } catch (GuzzleException $exception) {
             $this->logger()->error(
                 "Nacos instance register failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                 ['name' => '#base', 'trace' => $exception->getTrace()]
@@ -149,8 +152,8 @@ class InstanceRegistrarProcess extends AbstractProcess
                 if(isset($this->heartbeatTimers[$name])){
                     Timer::del($this->heartbeatTimers[$name]);
                 }
-                // 拆解配置
                 list($serviceName, $ip, $port, $option) = $instanceRegistrar;
+                // 注销实例
                 if(!$this->client->instance->delete(
                     $serviceName,
                     $option['groupName'] ?? null,

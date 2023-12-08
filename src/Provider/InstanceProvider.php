@@ -560,6 +560,7 @@ class InstanceProvider extends AbstractProvider
      * @param string|null $namespaceId
      * @param bool|null $ephemeral
      * @param bool $lightBeatEnabled
+     * @param float $timeout
      * @return bool|string
      * @throws GuzzleException
      */
@@ -600,6 +601,7 @@ class InstanceProvider extends AbstractProvider
      * @param string|null $namespaceId
      * @param bool|null $ephemeral
      * @param bool $lightBeatEnabled
+     * @param float $timeout
      * @return bool|PromiseInterface
      * @throws GuzzleException
      */
