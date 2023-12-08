@@ -44,6 +44,7 @@ trait Authentication
             return;
         }
         if (!$this->isExpired()) {
+            $options[RequestOptions::QUERY]['accessToken'] = $this->accessToken;
             return;
         }
 
