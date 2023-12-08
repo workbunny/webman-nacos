@@ -54,7 +54,9 @@ class InstanceRegistrarProcess extends AbstractProcess
             if (!($option['ephemeral'] ?? false)) {
                 $this->heartbeatTimers[$name] = Timer::add($this->heartbeat, function () use ($name) {
                     list($serviceName, $ip, $port, $option) = $this->instanceRegistrars[$name];
-
+                    if (isset($option['ephemeral'])) {
+                        $option['ephemeral'] = (is_string($option['ephemeral']) ? filter_var($option['ephemeral'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $option['ephemeral'] );
+                    }
                     try {
                         if(!$this->client->instance->beat(
                             $serviceName,
