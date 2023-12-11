@@ -101,6 +101,7 @@ class InstanceRegistrarProcess extends AbstractProcess
                 foreach ($instanceRegistrars as $name => $instanceRegistrar){
                     // 拆解配置
                     list($serviceName, $ip, $port, $option) = $instanceRegistrar;
+                    $option['enabled'] = is_bool($option['enabled']) ? ($option['enabled'] ? 'true' : 'false') : $option['enabled'];
                     // 注册
                     $promises[] = $this->client->instance->registerAsync($ip, $port, $serviceName, $option)
                         ->then(function (ResponseInterface $response) use ($instanceRegistrar, $name) {
