@@ -69,8 +69,8 @@ return [
             [
                 'groupName' => 'DEFAULT_GROUP',
                 'namespaceId' => '',
-                'enabled' => true,
-                'ephemeral' => 'false'
+                'enabled'     => 'true',
+                'ephemeral'   => 'false'
             ],
         ],
         # 以下可以新增多个数组

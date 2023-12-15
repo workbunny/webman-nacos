@@ -72,13 +72,13 @@ class InstanceProvider extends AbstractProvider
      * @param int $port
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
+     *     'groupName'   => '',
      *     'clusterName' => '',
      *     'namespaceId' => '',
-     *     'weight' => 99.0,
-     *     'metadata' => '',
-     *     'enabled' => true,
-     *     'ephemeral' => false, // 是否临时实例
+     *     'weight'      => 99.0,
+     *     'metadata'    => '',
+     *     'enabled'     => 'true',  // 是否上线
+     *     'ephemeral'   => 'false', // 是否临时实例
      * ]
      * @return bool|PromiseInterface
      * @throws GuzzleException
@@ -103,10 +103,10 @@ class InstanceProvider extends AbstractProvider
      *     'groupName' => '',
      *     'clusterName' => '',
      *     'namespaceId' => '',
-     *     'weight' => 99.0,
-     *     'metadata' => '',
-     *     'enabled' => true,
-     *     'ephemeral' => false, // 是否临时实例
+     *     'weight'      => 99.0,
+     *     'metadata'    => '',
+     *     'enabled'     => 'true',  // 是否上线
+     *     'ephemeral'   => 'false', // 是否临时实例
      * ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
@@ -228,8 +228,8 @@ class InstanceProvider extends AbstractProvider
      *     'namespaceId' => '',
      *     'weight' => 0.99,
      *     'metadata' => '', // json
-     *     'enabled' => false,
-     *     'ephemeral' => false,
+     *     'enabled' => 'false',
+     *     'ephemeral' => 'false',
      * ]
      * @return bool|string
      * @throws GuzzleException
@@ -255,8 +255,8 @@ class InstanceProvider extends AbstractProvider
      *     'namespaceId' => '',
      *     'weight' => 0.99,
      *     'metadata' => '', // json
-     *     'enabled' => false,
-     *     'ephemeral' => false,
+     *     'enabled' => 'false',
+     *     'ephemeral' => 'false',
      * ]
      * @return bool|PromiseInterface
      * @throws GuzzleException
@@ -284,8 +284,8 @@ class InstanceProvider extends AbstractProvider
      *     'namespaceId' => '',
      *     'weight' => 0.99,
      *     'metadata' => '', // json
-     *     'enabled' => false,
-     *     'ephemeral' => false,
+     *     'enabled' => 'false',
+     *     'ephemeral' => 'false',
      * ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
