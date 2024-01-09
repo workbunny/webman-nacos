@@ -15,6 +15,7 @@ namespace Workbunny\WebmanNacos;
 
 use GuzzleHttp\Handler\MockHandler;
 use Workbunny\WebmanNacos\Exception\NacosException;
+use Workbunny\WebmanNacos\Exception\PluginDisableException;
 use Workbunny\WebmanNacos\Provider\ConfigProvider;
 use Workbunny\WebmanNacos\Provider\InstanceProvider;
 use Workbunny\WebmanNacos\Provider\OperatorProvider;
@@ -69,6 +70,10 @@ class Client
      */
     public static function channel(string $name = 'default'): Client
     {
+        // 如果插件关闭，则抛出一个特定异常
+        if (!config('plugin.workbunny.webman-nacos.app.enable', true)) {
+            throw new PluginDisableException();
+        }
         $channel = config('plugin.workbunny.webman-nacos.channel', []);
         if(empty($config = $channel[$name] ?? [])){
             throw new NacosException("Channel config $name is invalid.");
