@@ -17,9 +17,9 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
-    "guzzlehttp/promises": "^1.5",
+    "guzzlehttp/promises": "^1.5 | ^2.0",
     "guzzlehttp/guzzle": "^7.4",
-    "workerman/http-client": "^1.0",
+    "workerman/http-client": "^1.0 | ^2.0",
     "monolog/monolog": "^2.8",
     "ext-mbstring": "*"
   },
