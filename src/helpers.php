@@ -19,14 +19,30 @@ use Workerman\Worker;
 define('OPTIONS_SUCCESS','success');
 define('OPTIONS_ERROR','error');
 
+/**
+ * 重启
+ *
+ * @param string $file
+ * @return void
+ */
 function reload(string $file)
 {
     Worker::log($file . ' update and reload. ');
-    if(extension_loaded('posix') and extension_loaded('pcntl')){
+    if (extension_loaded('posix') and extension_loaded('pcntl')) {
         posix_kill(posix_getppid(), SIGUSR1);
-    }else{
+    } else {
         Worker::reloadAllWorkers();
     }
+}
+
+/**
+ * 获取本机ip
+ *
+ * @return string
+ */
+function get_local_ip(): string
+{
+    return trim(shell_exec('curl -s ifconfig.me'));
 }
 
 /**
@@ -36,9 +52,9 @@ function reload(string $file)
  */
 function config(string $key = null, $default = null)
 {
-    if(Client::$debug) {
+    if (Client::$debug) {
         return $default;
-    }else{
+    } else {
         return \config($key, $default);
     }
 }
