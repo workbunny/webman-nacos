@@ -50,7 +50,7 @@ function get_local_ip(): string
  * @param mixed|null $default
  * @return array|mixed|null
  */
-function config(string $key = null, $default = null)
+function config(?string $key = null, mixed $default = null)
 {
     if (Client::$debug) {
         return $default;
