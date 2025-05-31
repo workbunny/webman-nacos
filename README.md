@@ -189,7 +189,7 @@ var_dump($response);
 $client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->instance->delete('猜猜我是谁', 'DEFAULT_GROUP', '127.0.0.1', 8848, []);
 if (false === $response) {
-    var_dump($nacos->config->getMessage());
+    var_dump($client->config->getMessage());
 }
 ```
 
@@ -199,8 +199,9 @@ if (false === $response) {
 $client = \Workbunny\WebmanNacos\Client::channel();
 $response = $client->instance->list('猜猜我是谁', []);
 if (false === $response) {
-    var_dump($nacos->config->getMessage());
+    var_dump($client->config->getMessage());
 }
+print_r($response);
 ```
 
 **注：实例与服务的区别请参看Nacos文档；**
