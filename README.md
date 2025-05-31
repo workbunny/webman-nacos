@@ -178,8 +178,9 @@ $response = $client->instance->register('127.0.0.1', 8848, '猜猜我是谁', [
     'groupName' => 'DEFAULT_GROUP',
 ]);
 if (false === $response) {
-    var_dump($nacos->config->getMessage());
+    var_dump($client->instance->getMessage());
 }
+var_dump($response);
 ```
 
 - 移除实例
