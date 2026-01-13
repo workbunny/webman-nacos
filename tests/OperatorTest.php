@@ -7,7 +7,7 @@ namespace Tests;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
-class OperatorTest extends AbstractTest
+class OperatorTest extends AbstractTestCase
 {
     /**
      * @covers \Workbunny\WebmanNacos\Provider\OperatorProvider::getSwitches

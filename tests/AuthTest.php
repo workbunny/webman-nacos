@@ -8,7 +8,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
-class AuthTest extends AbstractTest
+class AuthTest extends AbstractTestCase
 {
     /**
      * @covers \Workbunny\WebmanNacos\Provider\AuthProvider::login

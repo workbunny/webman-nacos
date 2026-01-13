@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-class BaseTest extends AbstractTest
+class BaseTest extends AbstractTestCase
 {
     /**
      * @covers \Workbunny\WebmanNacos\Provider\AbstractProvider::verify

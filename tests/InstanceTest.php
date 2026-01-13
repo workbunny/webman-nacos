@@ -7,7 +7,7 @@ namespace Tests;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
-class InstanceTest extends AbstractTest
+class InstanceTest extends AbstractTestCase
 {
     /**
      * @covers \Workbunny\WebmanNacos\Provider\InstanceProvider::register

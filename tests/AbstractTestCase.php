@@ -7,7 +7,7 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use Workbunny\WebmanNacos\Client;
 
-abstract class AbstractTest extends TestCase
+abstract class AbstractTestCase extends TestCase
 {
     protected array $_config = [
         'host'     => '127.0.0.1',
