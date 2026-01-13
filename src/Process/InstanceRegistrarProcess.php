@@ -151,7 +151,11 @@ class InstanceRegistrarProcess extends AbstractProcess
                 if (isset($this->heartbeatTimers[$name])) {
                     Timer::del($this->heartbeatTimers[$name]);
                 }
-                list($serviceName, $ip, $port, $option) = $instanceRegistrar;
+                // 拆解配置
+                $serviceName = $instanceRegistrar['service_name'];
+                $ip = $instanceRegistrar['pod_ip'];
+                $port = $instanceRegistrar['pod_port'];
+                $option = $instanceRegistrar['options'] ?? [];
                 // 注销实例
                 if (!$this->client->instance->delete(
                     $serviceName,
