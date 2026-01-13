@@ -1,16 +1,17 @@
 <?php
+
 namespace Workbunny\WebmanNacos;
 
 class Install
 {
-    const WEBMAN_PLUGIN = true;
+    public const WEBMAN_PLUGIN = true;
 
     /**
      * @var array
      */
-    protected static $pathRelation = array (
+    protected static $pathRelation = [
   'config/plugin/workbunny/webman-nacos' => 'config/plugin/workbunny/webman-nacos',
-);
+];
 
     /**
      * Install
@@ -38,13 +39,13 @@ class Install
     {
         foreach (static::$pathRelation as $source => $dest) {
             if ($pos = strrpos($dest, '/')) {
-                $parent_dir = base_path().'/'.substr($dest, 0, $pos);
+                $parent_dir = base_path() . '/' . substr($dest, 0, $pos);
                 if (!is_dir($parent_dir)) {
                     mkdir($parent_dir, 0777, true);
                 }
             }
             //symlink(__DIR__ . "/$source", base_path()."/$dest");
-            copy_dir(__DIR__ . "/$source", base_path()."/$dest");
+            copy_dir(__DIR__ . "/$source", base_path() . "/$dest");
             echo "Create $dest
 ";
         }
@@ -57,7 +58,7 @@ class Install
     public static function uninstallByRelation()
     {
         foreach (static::$pathRelation as $source => $dest) {
-            $path = base_path()."/$dest";
+            $path = base_path() . "/$dest";
             if (!is_dir($path) && !is_file($path)) {
                 continue;
             }
@@ -70,5 +71,4 @@ class Install
             remove_dir($path);
         }
     }
-    
 }

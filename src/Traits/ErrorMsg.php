@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -24,7 +25,7 @@ trait ErrorMsg
      */
     public array $error = [
         'message' => '错误消息：',
-        'data' => [],
+        'data'    => [],
     ];
 
     /**
@@ -38,7 +39,7 @@ trait ErrorMsg
     {
         $this->error = [
             'message' => $message,
-            'data' => $data,
+            'data'    => $data,
         ];
 
         return $success;
@@ -75,8 +76,8 @@ trait ErrorMsg
         return [
             'success' => $success,
             'message' => $message,
-            'code' => $code,
-            'data' => $data,
+            'code'    => $code,
+            'data'    => $data,
         ];
     }
 }

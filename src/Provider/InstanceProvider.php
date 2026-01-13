@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -14,45 +15,45 @@ declare(strict_types=1);
 namespace Workbunny\WebmanNacos\Provider;
 
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\RequestOptions;
 
 class InstanceProvider extends AbstractProvider
 {
-    const REGISTER_URL = 'nacos/v1/ns/instance';
-    const REGISTER_METHOD = 'POST';
+    public const REGISTER_URL = 'nacos/v1/ns/instance';
+    public const REGISTER_METHOD = 'POST';
 
-    const DELETE_URL = 'nacos/v1/ns/instance';
-    const DELETE_METHOD = 'DELETE';
+    public const DELETE_URL = 'nacos/v1/ns/instance';
+    public const DELETE_METHOD = 'DELETE';
 
-    const UPDATE_URL = 'nacos/v1/ns/instance';
-    const UPDATE_METHOD = 'PUT';
+    public const UPDATE_URL = 'nacos/v1/ns/instance';
+    public const UPDATE_METHOD = 'PUT';
 
-    const DETAIL_URL = 'nacos/v1/ns/instance';
-    const DETAIL_METHOD = 'GET';
+    public const DETAIL_URL = 'nacos/v1/ns/instance';
+    public const DETAIL_METHOD = 'GET';
 
-    const LIST_URL = 'nacos/v1/ns/instance/list';
-    const LIST_METHOD = 'GET';
+    public const LIST_URL = 'nacos/v1/ns/instance/list';
+    public const LIST_METHOD = 'GET';
 
-    const UPDATE_HEALTH_URL = 'nacos/v1/ns/health/instance';
-    const UPDATE_HEALTH_METHOD = 'PUT';
+    public const UPDATE_HEALTH_URL = 'nacos/v1/ns/health/instance';
+    public const UPDATE_HEALTH_METHOD = 'PUT';
 
-    const BEAT_URL = 'nacos/v1/ns/instance/beat';
-    const BEAT_METHOD = 'PUT';
+    public const BEAT_URL = 'nacos/v1/ns/instance/beat';
+    public const BEAT_METHOD = 'PUT';
 
     /**
      * @param string $ip
      * @param int $port
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'weight' => 99.0,
-     *     'metadata' => '',
-     *     'enabled' => true,
-     *     'ephemeral' => false, // 是否临时实例
-     * ]
+     *                        'groupName' => '',
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'weight' => 99.0,
+     *                        'metadata' => '',
+     *                        'enabled' => true,
+     *                        'ephemeral' => false, // 是否临时实例
+     *                        ]
      * @return bool|string
      * @throws GuzzleException
      */
@@ -61,8 +62,8 @@ class InstanceProvider extends AbstractProvider
         return $this->request(self::REGISTER_METHOD, self::REGISTER_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $serviceName,
-                'ip' => $ip,
-                'port' => $port,
+                'ip'          => $ip,
+                'port'        => $port,
             ])),
         ]);
     }
@@ -72,42 +73,43 @@ class InstanceProvider extends AbstractProvider
      * @param int $port
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName'   => '',
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'weight'      => 99.0,
-     *     'metadata'    => '',
-     *     'enabled'     => 'true',  // 是否上线
-     *     'ephemeral'   => 'false', // 是否临时实例
-     * ]
+     *                        'groupName'   => '',
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'weight'      => 99.0,
+     *                        'metadata'    => '',
+     *                        'enabled'     => 'true',  // 是否上线
+     *                        'ephemeral'   => 'false', // 是否临时实例
+     *                        ]
      * @return bool|PromiseInterface
      * @throws GuzzleException
      */
-    public function registerAsync(string $ip, int $port, string $serviceName, array $optional = []){
+    public function registerAsync(string $ip, int $port, string $serviceName, array $optional = [])
+    {
         return $this->requestAsync(self::REGISTER_METHOD, self::REGISTER_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $serviceName,
-                'ip' => $ip,
-                'port' => $port,
+                'ip'          => $ip,
+                'port'        => $port,
             ])),
         ]);
     }
 
     /**
      * @param array $options = [
-     *  'serviceName' => '',
-     *  'ip' => '',
-     *  'port' => ''
-     * ]
+     *                       'serviceName' => '',
+     *                       'ip' => '',
+     *                       'port' => ''
+     *                       ]
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'weight'      => 99.0,
-     *     'metadata'    => '',
-     *     'enabled'     => 'true',  // 是否上线
-     *     'ephemeral'   => 'false', // 是否临时实例
-     * ]
+     *                        'groupName' => '',
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'weight'      => 99.0,
+     *                        'metadata'    => '',
+     *                        'enabled'     => 'true',  // 是否上线
+     *                        'ephemeral'   => 'false', // 是否临时实例
+     *                        ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -120,14 +122,15 @@ class InstanceProvider extends AbstractProvider
             ['port', 'is_int', true],
             ['serviceName', 'is_string', true],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::REGISTER_METHOD, self::REGISTER_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $options['serviceName'] ?? null,
-                'ip' => $options['ip'] ?? null,
-                'port' => $options['port'] ?? null,
+                'ip'          => $options['ip'] ?? null,
+                'port'        => $options['port'] ?? null,
             ])),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -137,10 +140,10 @@ class InstanceProvider extends AbstractProvider
      * @param string $ip
      * @param int $port
      * @param array $optional = [
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'ephemeral' => false,
-     * ]
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'ephemeral' => false,
+     *                        ]
      * @return bool|string
      * @throws GuzzleException
      */
@@ -149,9 +152,9 @@ class InstanceProvider extends AbstractProvider
         return $this->request(self::DELETE_METHOD, self::DELETE_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $serviceName,
-                'groupName' => $groupName,
-                'ip' => $ip,
-                'port' => $port,
+                'groupName'   => $groupName,
+                'ip'          => $ip,
+                'port'        => $port,
             ])),
         ]);
     }
@@ -162,10 +165,10 @@ class InstanceProvider extends AbstractProvider
      * @param string $ip
      * @param int $port
      * @param array $optional = [
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'ephemeral' => false,
-     * ]
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'ephemeral' => false,
+     *                        ]
      * @return bool|PromiseInterface
      * @throws GuzzleException
      */
@@ -174,25 +177,25 @@ class InstanceProvider extends AbstractProvider
         return $this->requestAsync(self::DELETE_METHOD, self::DELETE_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $serviceName,
-                'groupName' => $groupName,
-                'ip' => $ip,
-                'port' => $port,
+                'groupName'   => $groupName,
+                'ip'          => $ip,
+                'port'        => $port,
             ])),
         ]);
     }
 
     /**
      * @param array $options = [
-     *      'serviceName' => '',
-     *      'groupName' => '',
-     *      'ip' => '',
-     *      'port' => ''
-     * ]
+     *                       'serviceName' => '',
+     *                       'groupName' => '',
+     *                       'ip' => '',
+     *                       'port' => ''
+     *                       ]
      * @param array $optional = [
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'ephemeral' => false,
-     * ]
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'ephemeral' => false,
+     *                        ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -206,6 +209,7 @@ class InstanceProvider extends AbstractProvider
             ['ip', 'is_string', true],
             ['port', 'is_int', true],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::DELETE_METHOD, self::DELETE_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $options['serviceName'] ?? null,
@@ -214,7 +218,7 @@ class InstanceProvider extends AbstractProvider
                 'port'        => $options['port'] ?? null,
             ])),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -223,14 +227,14 @@ class InstanceProvider extends AbstractProvider
      * @param int $port
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'weight' => 0.99,
-     *     'metadata' => '', // json
-     *     'enabled' => 'false',
-     *     'ephemeral' => 'false',
-     * ]
+     *                        'groupName' => '',
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'weight' => 0.99,
+     *                        'metadata' => '', // json
+     *                        'enabled' => 'false',
+     *                        'ephemeral' => 'false',
+     *                        ]
      * @return bool|string
      * @throws GuzzleException
      */
@@ -239,8 +243,8 @@ class InstanceProvider extends AbstractProvider
         return $this->request(self::UPDATE_METHOD, self::UPDATE_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $serviceName,
-                'ip' => $ip,
-                'port' => $port,
+                'ip'          => $ip,
+                'port'        => $port,
             ])),
         ]);
     }
@@ -250,14 +254,14 @@ class InstanceProvider extends AbstractProvider
      * @param int $port
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'weight' => 0.99,
-     *     'metadata' => '', // json
-     *     'enabled' => 'false',
-     *     'ephemeral' => 'false',
-     * ]
+     *                        'groupName' => '',
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'weight' => 0.99,
+     *                        'metadata' => '', // json
+     *                        'enabled' => 'false',
+     *                        'ephemeral' => 'false',
+     *                        ]
      * @return bool|PromiseInterface
      * @throws GuzzleException
      */
@@ -266,27 +270,27 @@ class InstanceProvider extends AbstractProvider
         return $this->requestAsync(self::UPDATE_METHOD, self::UPDATE_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $serviceName,
-                'ip' => $ip,
-                'port' => $port,
+                'ip'          => $ip,
+                'port'        => $port,
             ])),
         ]);
     }
 
     /**
      * @param array $options = [
-     *      'serviceName' => '',
-     *      'ip' => '',
-     *      'port' => '',
-     * ]
+     *                       'serviceName' => '',
+     *                       'ip' => '',
+     *                       'port' => '',
+     *                       ]
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'clusterName' => '',
-     *     'namespaceId' => '',
-     *     'weight' => 0.99,
-     *     'metadata' => '', // json
-     *     'enabled' => 'false',
-     *     'ephemeral' => 'false',
-     * ]
+     *                        'groupName' => '',
+     *                        'clusterName' => '',
+     *                        'namespaceId' => '',
+     *                        'weight' => 0.99,
+     *                        'metadata' => '', // json
+     *                        'enabled' => 'false',
+     *                        'ephemeral' => 'false',
+     *                        ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -299,6 +303,7 @@ class InstanceProvider extends AbstractProvider
             ['ip', 'is_string', true],
             ['port', 'is_int', true],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::UPDATE_METHOD, self::UPDATE_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $options['serviceName'] ?? null,
@@ -306,18 +311,18 @@ class InstanceProvider extends AbstractProvider
                 'port'        => $options['port'] ?? null,
             ])),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
     /**
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'namespaceId' => '',
-     *     'clusters' => '', // 集群名称(字符串，多个集群用逗号分隔)
-     *     'healthyOnly' => false,
-     * ]
+     *                        'groupName' => '',
+     *                        'namespaceId' => '',
+     *                        'clusters' => '', // 集群名称(字符串，多个集群用逗号分隔)
+     *                        'healthyOnly' => false,
+     *                        ]
      * @return bool|string
      * @throws GuzzleException
      */
@@ -333,11 +338,11 @@ class InstanceProvider extends AbstractProvider
     /**
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'namespaceId' => '',
-     *     'clusters' => '', // 集群名称(字符串，多个集群用逗号分隔)
-     *     'healthyOnly' => false,
-     * ]
+     *                        'groupName' => '',
+     *                        'namespaceId' => '',
+     *                        'clusters' => '', // 集群名称(字符串，多个集群用逗号分隔)
+     *                        'healthyOnly' => false,
+     *                        ]
      * @return bool|PromiseInterface
      * @throws GuzzleException
      */
@@ -353,11 +358,11 @@ class InstanceProvider extends AbstractProvider
     /**
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'namespaceId' => '',
-     *     'clusters' => '', // 集群名称(字符串，多个集群用逗号分隔)
-     *     'healthyOnly' => false,
-     * ]
+     *                        'groupName' => '',
+     *                        'namespaceId' => '',
+     *                        'clusters' => '', // 集群名称(字符串，多个集群用逗号分隔)
+     *                        'healthyOnly' => false,
+     *                        ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -370,7 +375,7 @@ class InstanceProvider extends AbstractProvider
                 'serviceName' => $serviceName,
             ])),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -379,12 +384,12 @@ class InstanceProvider extends AbstractProvider
      * @param int $port
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'namespaceId' => '',
-     *     'cluster' => '',
-     *     'healthyOnly' => false,
-     *     'ephemeral' => false,
-     * ]
+     *                        'groupName' => '',
+     *                        'namespaceId' => '',
+     *                        'cluster' => '',
+     *                        'healthyOnly' => false,
+     *                        'ephemeral' => false,
+     *                        ]
      * @return bool|string
      * @throws GuzzleException
      */
@@ -392,8 +397,8 @@ class InstanceProvider extends AbstractProvider
     {
         return $this->request(self::DETAIL_METHOD, self::DETAIL_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
-                'ip' => $ip,
-                'port' => $port,
+                'ip'          => $ip,
+                'port'        => $port,
                 'serviceName' => $serviceName,
             ])),
         ]);
@@ -404,12 +409,12 @@ class InstanceProvider extends AbstractProvider
      * @param int $port
      * @param string $serviceName
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'namespaceId' => '',
-     *     'cluster' => '',
-     *     'healthyOnly' => false,
-     *     'ephemeral' => false,
-     * ]
+     *                        'groupName' => '',
+     *                        'namespaceId' => '',
+     *                        'cluster' => '',
+     *                        'healthyOnly' => false,
+     *                        'ephemeral' => false,
+     *                        ]
      * @return bool|string
      * @throws GuzzleException
      */
@@ -417,8 +422,8 @@ class InstanceProvider extends AbstractProvider
     {
         return $this->request(self::DETAIL_METHOD, self::DETAIL_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
-                'ip' => $ip,
-                'port' => $port,
+                'ip'          => $ip,
+                'port'        => $port,
                 'serviceName' => $serviceName,
             ])),
         ]);
@@ -426,17 +431,17 @@ class InstanceProvider extends AbstractProvider
 
     /**
      * @param array $options = [
-     *      'serviceName' => '',
-     *      'ip' => '',
-     *      'port' => '',
-     * ]
+     *                       'serviceName' => '',
+     *                       'ip' => '',
+     *                       'port' => '',
+     *                       ]
      * @param array $optional = [
-     *     'groupName' => '',
-     *     'namespaceId' => '',
-     *     'cluster' => '',
-     *     'healthyOnly' => false,
-     *     'ephemeral' => false,
-     * ]
+     *                        'groupName' => '',
+     *                        'namespaceId' => '',
+     *                        'cluster' => '',
+     *                        'healthyOnly' => false,
+     *                        'ephemeral' => false,
+     *                        ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool|string
@@ -449,14 +454,15 @@ class InstanceProvider extends AbstractProvider
             ['ip', 'is_string', true],
             ['port', 'is_int', true],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::DETAIL_METHOD, self::DETAIL_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
-                'ip' => $options['ip'] ?? null,
-                'port' => $options['port'] ?? null,
+                'ip'          => $options['ip'] ?? null,
+                'port'        => $options['port'] ?? null,
                 'serviceName' => $options['serviceName'] ?? null,
             ])),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -466,10 +472,10 @@ class InstanceProvider extends AbstractProvider
      * @param string $serviceName
      * @param bool $healthy
      * @param array $optional = [
-     *     'namespaceId' => '',
-     *     'groupName' => '',
-     *     'clusterName' => '',
-     * ]
+     *                        'namespaceId' => '',
+     *                        'groupName' => '',
+     *                        'clusterName' => '',
+     *                        ]
      * @return bool|string
      * @throws GuzzleException
      */
@@ -477,10 +483,10 @@ class InstanceProvider extends AbstractProvider
     {
         return $this->request(self::UPDATE_HEALTH_METHOD, self::UPDATE_HEALTH_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
-                'ip' => $ip,
-                'port' => $port,
+                'ip'          => $ip,
+                'port'        => $port,
                 'serviceName' => $serviceName,
-                'healthy' => $healthy,
+                'healthy'     => $healthy,
             ])),
         ]);
     }
@@ -491,10 +497,10 @@ class InstanceProvider extends AbstractProvider
      * @param string $serviceName
      * @param bool $healthy
      * @param array $optional = [
-     *     'namespaceId' => '',
-     *     'groupName' => '',
-     *     'clusterName' => '',
-     * ]
+     *                        'namespaceId' => '',
+     *                        'groupName' => '',
+     *                        'clusterName' => '',
+     *                        ]
      * @return bool|PromiseInterface
      * @throws GuzzleException
      */
@@ -502,26 +508,26 @@ class InstanceProvider extends AbstractProvider
     {
         return $this->requestAsync(self::UPDATE_HEALTH_METHOD, self::UPDATE_HEALTH_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
-                'ip' => $ip,
-                'port' => $port,
+                'ip'          => $ip,
+                'port'        => $port,
                 'serviceName' => $serviceName,
-                'healthy' => $healthy,
+                'healthy'     => $healthy,
             ])),
         ]);
     }
 
     /**
      * @param array $options = [
-     *      'serviceName' => '',
-     *      'ip' => '',
-     *      'port' => 8000,
-     *      'healthy => true
-     * ]
+     *                       'serviceName' => '',
+     *                       'ip' => '',
+     *                       'port' => 8000,
+     *                       'healthy => true
+     *                       ]
      * @param array $optional = [
-     *     'namespaceId' => '',
-     *     'groupName' => '',
-     *     'clusterName' => '',
-     * ]
+     *                        'namespaceId' => '',
+     *                        'groupName' => '',
+     *                        'clusterName' => '',
+     *                        ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -533,29 +539,30 @@ class InstanceProvider extends AbstractProvider
             ['serviceName', 'is_string', true],
             ['ip', 'is_string', true],
             ['port', 'is_int', true],
-            ['healthy', 'is_bool', true]
+            ['healthy', 'is_bool', true],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::UPDATE_HEALTH_METHOD, self::UPDATE_HEALTH_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
-                'ip' => $options['ip'] ?? null,
-                'port' => $options['port'] ?? null,
+                'ip'          => $options['ip'] ?? null,
+                'port'        => $options['port'] ?? null,
                 'serviceName' => $options['serviceName'] ?? null,
-                'healthy' => $options['healthy'] ?? null,
+                'healthy'     => $options['healthy'] ?? null,
             ])),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
     /**
      * @param string $serviceName
      * @param array $beat = [
-     *     'ip' => '',
-     *     'port' => 9501,
-     *     'serviceName' => '',
-     *     'cluster' => '',
-     *     'weight' => 1,
-     * ]
+     *                    'ip' => '',
+     *                    'port' => 9501,
+     *                    'serviceName' => '',
+     *                    'cluster' => '',
+     *                    'weight' => 1,
+     *                    ]
      * @param string|null $groupName
      * @param string|null $namespaceId
      * @param bool|null $ephemeral
@@ -572,17 +579,16 @@ class InstanceProvider extends AbstractProvider
         ?bool $ephemeral = null,
         bool $lightBeatEnabled = false,
         float $timeout = 5.0
-    )
-    {
+    ) {
         return $this->request(self::BEAT_METHOD, self::BEAT_URL, [
             RequestOptions::QUERY => $this->filter([
                 'serviceName' => $serviceName,
-                'ip' => $beat['ip'] ?? null,
-                'port' => $beat['port'] ?? null,
-                'groupName' => $groupName,
+                'ip'          => $beat['ip'] ?? null,
+                'port'        => $beat['port'] ?? null,
+                'groupName'   => $groupName,
                 'namespaceId' => $namespaceId,
-                'ephemeral' => $ephemeral,
-                'beat' => ! $lightBeatEnabled ? json_encode($beat) : '',
+                'ephemeral'   => $ephemeral,
+                'beat'        => !$lightBeatEnabled ? json_encode($beat) : '',
             ]),
             RequestOptions::TIMEOUT => $timeout,
         ]);
@@ -591,12 +597,12 @@ class InstanceProvider extends AbstractProvider
     /**
      * @param string $serviceName
      * @param array $beat = [
-     *     'ip' => '',
-     *     'port' => 9501,
-     *     'serviceName' => '',
-     *     'cluster' => '',
-     *     'weight' => 1,
-     * ]
+     *                    'ip' => '',
+     *                    'port' => 9501,
+     *                    'serviceName' => '',
+     *                    'cluster' => '',
+     *                    'weight' => 1,
+     *                    ]
      * @param string|null $groupName
      * @param string|null $namespaceId
      * @param bool|null $ephemeral
@@ -613,17 +619,16 @@ class InstanceProvider extends AbstractProvider
         ?bool $ephemeral = null,
         bool $lightBeatEnabled = false,
         float $timeout = 5.0
-    )
-    {
+    ) {
         return $this->requestAsync(self::BEAT_METHOD, self::BEAT_URL, [
             RequestOptions::QUERY => $this->filter([
                 'serviceName' => $serviceName,
-                'ip' => $beat['ip'] ?? null,
-                'port' => $beat['port'] ?? null,
-                'groupName' => $groupName,
+                'ip'          => $beat['ip'] ?? null,
+                'port'        => $beat['port'] ?? null,
+                'groupName'   => $groupName,
                 'namespaceId' => $namespaceId,
-                'ephemeral' => $ephemeral,
-                'beat' => ! $lightBeatEnabled ? json_encode($beat) : '',
+                'ephemeral'   => $ephemeral,
+                'beat'        => !$lightBeatEnabled ? json_encode($beat) : '',
             ]),
             RequestOptions::TIMEOUT => $timeout,
         ]);
@@ -631,18 +636,18 @@ class InstanceProvider extends AbstractProvider
 
     /**
      * @param array $options = [
-     *      'serviceName' => '',
-     *      'groupName' => '',
-     *      'namespaceId' => '',
-     *      'ephemeral' => false, // bool
-     *      'beat' => [
-     *          'ip' => '',
-     *          'port' => 9501,
-     *          'serviceName' => '',
-     *          'cluster' => '',
-     *          'weight' => 1,
-     *      ]
-     * ]
+     *                       'serviceName' => '',
+     *                       'groupName' => '',
+     *                       'namespaceId' => '',
+     *                       'ephemeral' => false, // bool
+     *                       'beat' => [
+     *                       'ip' => '',
+     *                       'port' => 9501,
+     *                       'serviceName' => '',
+     *                       'cluster' => '',
+     *                       'weight' => 1,
+     *                       ]
+     *                       ]
      * @param bool $lightBeatEnabled
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
@@ -659,19 +664,20 @@ class InstanceProvider extends AbstractProvider
             ['ephemeral', 'is_bool', false],
             ['timeout', 'is_float', false],
         ]);
+
         return $this->requestAsync(self::BEAT_METHOD, self::BEAT_URL, [
             RequestOptions::QUERY => $this->filter([
                 'serviceName' => $options['serviceName'] ?? null,
-                'ip' => $options['beat']['ip'] ?? null,
-                'port' => $options['beat']['port'] ?? null,
-                'groupName' => $options['groupName'] ?? null,
+                'ip'          => $options['beat']['ip'] ?? null,
+                'port'        => $options['beat']['port'] ?? null,
+                'groupName'   => $options['groupName'] ?? null,
                 'namespaceId' => $options['namespaceId'] ?? null,
-                'ephemeral' => $options['ephemeral'] ?? null,
-                'beat' => ! $lightBeatEnabled ? json_encode($options['beat'] ?? []) : '',
+                'ephemeral'   => $options['ephemeral'] ?? null,
+                'beat'        => !$lightBeatEnabled ? json_encode($options['beat'] ?? []) : '',
             ]),
             RequestOptions::TIMEOUT => $options['timeout'] ?? 5.0,
-            OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_SUCCESS         => $success,
+            OPTIONS_ERROR           => $error,
         ]);
     }
 }

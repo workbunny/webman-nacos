@@ -1,10 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests;
-
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
 
 class BaseTest extends AbstractTest
 {
@@ -19,14 +17,14 @@ class BaseTest extends AbstractTest
         try {
             $this->provider()->verifyTester([
                 'serviceName' => 'serviceName',
-                'ip' => '192.168.1.1',
-                'port' => 8000,
+                'ip'          => '192.168.1.1',
+                'port'        => 8000,
             ], [
                 ['serviceName', 'is_string', true],
                 ['ip', 'is_string', true],
                 ['port', 'is_int', true],
             ]);
-        }catch (\InvalidArgumentException $exception){
+        } catch (\InvalidArgumentException $exception) {
             $result = $exception->getMessage();
         }
         $this->assertEquals(null, $result);
@@ -36,13 +34,13 @@ class BaseTest extends AbstractTest
         try {
             $this->provider()->verifyTester([
                 'serviceName' => 'serviceName',
-                'ip' => '192.168.1.1',
+                'ip'          => '192.168.1.1',
             ], [
                 ['serviceName', 'is_string', true],
                 ['ip', 'is_string', true],
                 ['port', 'is_int', false],
             ]);
-        }catch (\InvalidArgumentException $exception){
+        } catch (\InvalidArgumentException $exception) {
             $result = $exception->getMessage();
         }
         $this->assertEquals(null, $result);
@@ -52,13 +50,13 @@ class BaseTest extends AbstractTest
         try {
             $this->provider()->verifyTester([
                 'serviceName' => 'serviceName',
-                'ip' => '192.168.1.1',
+                'ip'          => '192.168.1.1',
             ], [
                 ['serviceName', 'is_string', true],
                 ['ip', 'is_string', true],
                 ['port', 'is_i', false],
             ]);
-        }catch (\InvalidArgumentException $exception){
+        } catch (\InvalidArgumentException $exception) {
             $result = $exception->getMessage();
         }
         $this->assertEquals(null, $result);
@@ -68,13 +66,13 @@ class BaseTest extends AbstractTest
         try {
             $this->provider()->verifyTester([
                 'serviceName' => 'serviceName',
-                'ip' => '192.168.1.1',
+                'ip'          => '192.168.1.1',
             ], [
                 ['serviceName', 'is_s', true],
                 ['ip', 'is_string', true],
                 ['port', 'is_int', false],
             ]);
-        }catch (\InvalidArgumentException $exception){
+        } catch (\InvalidArgumentException $exception) {
             $result = $exception->getMessage();
         }
         $this->assertEquals('Invalid Function: is_s', $result);
@@ -84,13 +82,13 @@ class BaseTest extends AbstractTest
         try {
             $this->provider()->verifyTester([
                 'serviceName' => 'serviceName',
-                'ip' => '192.168.1.1',
+                'ip'          => '192.168.1.1',
             ], [
                 ['serviceName', 'is_int', true],
                 ['ip', 'is_string', true],
                 ['port', 'is_int', false],
             ]);
-        }catch (\InvalidArgumentException $exception){
+        } catch (\InvalidArgumentException $exception) {
             $result = $exception->getMessage();
         }
         $this->assertEquals('Invalid Argument: serviceName', $result);
@@ -103,34 +101,34 @@ class BaseTest extends AbstractTest
     public function testFilterOfAbstractProvider()
     {
         $this->assertEquals([
-            'serviceName' => 'serviceName'
+            'serviceName' => 'serviceName',
         ], $this->provider()->filterTester([
             'serviceName' => 'serviceName',
-            'groupName' => null,
+            'groupName'   => null,
         ]));
 
         $this->assertEquals([
             'serviceName' => 'serviceName',
-            'groupName' => 0,
+            'groupName'   => 0,
         ], $this->provider()->filterTester([
             'serviceName' => 'serviceName',
-            'groupName' => 0,
+            'groupName'   => 0,
         ]));
 
         $this->assertEquals([
             'serviceName' => 'serviceName',
-            'groupName' => '',
+            'groupName'   => '',
         ], $this->provider()->filterTester([
             'serviceName' => 'serviceName',
-            'groupName' => '',
+            'groupName'   => '',
         ]));
 
         $this->assertEquals([
             'serviceName' => 'serviceName',
-            'groupName' => 'null',
+            'groupName'   => 'null',
         ], $this->provider()->filterTester([
             'serviceName' => 'serviceName',
-            'groupName' => 'null',
+            'groupName'   => 'null',
         ]));
 
         $this->assertEquals([

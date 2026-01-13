@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -22,8 +23,8 @@ use Workbunny\WebmanNacos\Exception\NacosRequestException;
 
 class AuthProvider extends AbstractProvider
 {
-    const LOGIN_URL = 'nacos/v1/auth/users/login';
-    const LOGIN_METHOD = 'POST';
+    public const LOGIN_URL = 'nacos/v1/auth/users/login';
+    public const LOGIN_METHOD = 'POST';
 
     /**
      * 授权登录
@@ -49,6 +50,7 @@ class AuthProvider extends AbstractProvider
             }
             throw new NacosRequestException($exception->getMessage(), $exception->getCode());
         }
+
         return $response;
     }
 }

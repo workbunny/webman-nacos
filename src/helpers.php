@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -13,26 +14,25 @@ declare(strict_types=1);
 
 namespace Workbunny\WebmanNacos;
 
-use Webman\Config;
 use Workerman\Worker;
 
-define('OPTIONS_SUCCESS','success');
-define('OPTIONS_ERROR','error');
+define('OPTIONS_SUCCESS', 'success');
+define('OPTIONS_ERROR', 'error');
 
 /**
  * 重启
  *
  * @param string $file
- * @return void
+ * @return bool
  */
-function reload(string $file)
+function reload(string $file): bool
 {
     Worker::log($file . ' update and reload. ');
     if (extension_loaded('posix') and extension_loaded('pcntl')) {
-        posix_kill(posix_getppid(), SIGUSR1);
-    } else {
-        Worker::reloadAllWorkers();
+        return posix_kill(posix_getppid(), SIGUSR1);
     }
+
+    return false;
 }
 
 /**
@@ -50,7 +50,7 @@ function get_local_ip(): string
  * @param mixed|null $default
  * @return array|mixed|null
  */
-function config(?string $key = null, $default = null)
+function config(?string $key = null, mixed $default = null): mixed
 {
     if (Client::$debug) {
         return $default;

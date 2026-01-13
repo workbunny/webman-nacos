@@ -1,15 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Workbunny\WebmanNacos\Process;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\Utils;
 use Psr\Http\Message\ResponseInterface;
-use GuzzleHttp\Exception\GuzzleException;
-use support\Log;
-use Workerman\Worker;
-use Workbunny\WebmanNacos\Timer;
+
 use function Workbunny\WebmanNacos\reload;
+
+use Workbunny\WebmanNacos\Timer;
+use Workerman\Worker;
 
 /**
  * 单Timer阻塞监听器
@@ -28,7 +30,7 @@ class ConfigListenerProcess extends AbstractProcess
     /** @var int 长轮询间隔 秒 */
     protected int $longPullingInterval;
 
-    /** @var array  */
+    /** @var array */
     protected array $configListeners;
 
     /**
@@ -38,7 +40,7 @@ class ConfigListenerProcess extends AbstractProcess
     {
         parent::__construct();
         $this->longPullingInterval = config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30);
-        $this->configListeners = config('plugin.workbunny.webman-nacos.app.config_listeners', []);
+        $this->configListeners = config('plugin.workbunny.webman-nacos.listeners', []);
     }
 
     /**
@@ -51,7 +53,7 @@ class ConfigListenerProcess extends AbstractProcess
     protected function _get(string $dataId, string $group, string $tenant, string $path)
     {
         $res = $this->client->config->get($dataId, $group, $tenant);
-        if(file_put_contents($path, $res, LOCK_EX)){
+        if (file_put_contents($path, $res, LOCK_EX)) {
             reload($path);
         }
     }
@@ -65,50 +67,49 @@ class ConfigListenerProcess extends AbstractProcess
     {
         $worker->count = 1;
 
-        if($this->configListeners){
+        if ($this->configListeners) {
             // 拉取配置项文件
-            foreach ($this->configListeners as $listener){
+            foreach ($this->configListeners as $listener) {
                 list($dataId, $group, $tenant, $configPath) = $listener;
-                if(!file_exists($configPath)){
+                if (!file_exists($configPath)) {
                     $this->_get($dataId, $group, $tenant, $configPath);
                 }
             }
             // 创建定时监听
-            Timer::add(0.0, (float)$this->longPullingInterval, function (){
+            Timer::add(0.0, (float) $this->longPullingInterval, function () {
                 $promises = [];
-                foreach ($this->configListeners as $listener){
+                foreach ($this->configListeners as $listener) {
                     list($dataId, $group, $tenant, $configPath) = $listener;
-                    if(file_exists($configPath)){
+                    if (file_exists($configPath)) {
                         $promises[] = $this->client->config->listenerAsync(
                             $dataId,
                             $group,
                             md5(file_get_contents($configPath)),
                             $tenant,
                             $this->longPullingInterval * 1000
-                        )->then(function (ResponseInterface $response) use($dataId, $group, $tenant, $configPath){
-                            if($response->getStatusCode() === 200){
-                                if($response->getBody()->getContents() !== ''){
+                        )->then(function (ResponseInterface $response) use ($dataId, $group, $tenant, $configPath) {
+                            if ($response->getStatusCode() === 200) {
+                                if ($response->getBody()->getContents() !== '') {
                                     $this->_get($dataId, $group, $tenant, $configPath);
                                 }
-                            }else{
-                                $this->logger()->error(
-                                    "Nacos listener failed: [0] {$this->client->config->getMessage()}.",
-                                    ['dataId' => $dataId, 'trace' => []]
-                                );
-                                sleep($this->retry_interval);
-                                Worker::stopAll(0);
+
+                                return;
                             }
-                        },function (GuzzleException $exception) use ($dataId){
+                            $this->logger()->error(
+                                "Nacos listener failed: [0] {$this->client->config->getMessage()}.",
+                                ['dataId' => $dataId, 'trace' => []]
+                            );
+                            $this->_stop($this->retry_interval);
+                        }, function (GuzzleException $exception) use ($dataId) {
                             $this->logger()->error(
                                 "Nacos listener failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                                 ['dataId' => $dataId, 'trace' => $exception->getTrace()]
                             );
-                            sleep($this->retry_interval);
-                            Worker::stopAll(0);
+                            $this->_stop($this->retry_interval);
                         });
                     }
                 }
-                if($promises){
+                if ($promises) {
                     Utils::settle($promises)->wait();
                 }
             });
@@ -118,5 +119,7 @@ class ConfigListenerProcess extends AbstractProcess
     /**
      * @inheritDoc
      */
-    public function onWorkerStop(Worker $worker){}
+    public function onWorkerStop(Worker $worker)
+    {
+    }
 }

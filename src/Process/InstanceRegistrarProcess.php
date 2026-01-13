@@ -1,11 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Workbunny\WebmanNacos\Process;
 
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
 use Psr\Http\Message\ResponseInterface;
 use Workerman\Timer;
@@ -17,7 +16,6 @@ use Workerman\Worker;
  */
 class InstanceRegistrarProcess extends AbstractProcess
 {
-
     /**
      * @var array
      */
@@ -36,7 +34,7 @@ class InstanceRegistrarProcess extends AbstractProcess
     public function __construct()
     {
         parent::__construct();
-        $this->heartbeat = (float)config('plugin.workbunny.webman-nacos.app.instance_heartbeat', 5.0);
+        $this->heartbeat = (float) config('plugin.workbunny.webman-nacos.app.instance_heartbeat', 5.0);
     }
 
     /**
@@ -49,43 +47,47 @@ class InstanceRegistrarProcess extends AbstractProcess
         if (isset($this->instanceRegistrars[$name])) {
             list($serviceName, $ip, $port, $option) = $this->instanceRegistrars[$name];
             if (isset($option['ephemeral'])) {
-                $option['ephemeral'] = (is_string($option['ephemeral']) ? filter_var($option['ephemeral'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $option['ephemeral'] );
+                $option['ephemeral'] = (is_string($option['ephemeral']) ? filter_var($option['ephemeral'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $option['ephemeral']);
             }
             // 仅对非永久实例进行心跳
             if ($option['ephemeral'] ?? false) {
                 $this->heartbeatTimers[$name] = Timer::add($this->heartbeat, function () use ($name, $serviceName, $ip, $port, $option) {
+                    if ($this->is_stopping) {
+                        return;
+                    }
                     try {
-                        if(!$this->client->instance->beat(
+                        if (!$this->client->instance->beat(
                             $serviceName,
                             array_filter([
-                                    'ip' => $ip,
-                                    'port' => $port,
+                                    'ip'          => $ip,
+                                    'port'        => $port,
                                     'serviceName' => $serviceName,
-                                ] + $option, fn($value) => $value !== null),
+                                ] + $option, fn ($value) => $value !== null),
                             $option['groupName'] ?? null,
                             $option['namespaceId'] ?? null,
                             $option['ephemeral'] ?? null,
                             false,
                             $this->heartbeat
-                        )){
+                        )) {
                             $this->logger()->error(
                                 "Nacos instance heartbeat failed: [0] {$this->client->instance->getMessage()}.",
                                 ['name' => $name, 'trace' => []]
                             );
-                            sleep($this->retry_interval);
-                            Worker::stopAll(0);
+                            $this->_stop($this->retry_interval);
+
+                            return;
                         }
-                    } catch (GuzzleException $exception){
+                    } catch (GuzzleException $exception) {
                         $this->logger()->error(
                             "Nacos instance heartbeat failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                             ['name' => $name, 'trace' => $exception->getTrace()]
                         );
-                        sleep($this->retry_interval);
-                        Worker::stopAll(0);
+                        $this->_stop($this->retry_interval);
+
+                        return;
                     }
                 });
             }
-
         }
     }
 
@@ -96,47 +98,42 @@ class InstanceRegistrarProcess extends AbstractProcess
     {
         $worker->count = 1;
         try {
-            if($instanceRegistrars = config('plugin.workbunny.webman-nacos.app.instance_registrars', [])){
+            if ($instanceRegistrars = config('plugin.workbunny.webman-nacos.registrars', [])) {
                 $promises = [];
-                foreach ($instanceRegistrars as $name => $instanceRegistrar){
+                foreach ($instanceRegistrars as $name => $instanceRegistrar) {
                     // 拆解配置
                     list($serviceName, $ip, $port, $option) = $instanceRegistrar;
                     // 注册
                     $promises[] = $this->client->instance->registerAsync($ip, $port, $serviceName, $option)
                         ->then(function (ResponseInterface $response) use ($instanceRegistrar, $name) {
-                            if($response->getStatusCode() === 200){
+                            if ($response->getStatusCode() === 200) {
                                 $this->instanceRegistrars[$name] = $instanceRegistrar;
                                 $this->_heartbeat($name);
-                            }else{
-                                $this->logger()->error(
-                                    "Naocs instance register failed: [0] {$this->client->instance->getMessage()}.",
-                                    ['name' => $name, 'trace' => []]
-                                );
 
-                                sleep($this->retry_interval);
-                                Worker::stopAll(0);
+                                return;
                             }
+                            $this->logger()->error(
+                                "Naocs instance register failed: [0] {$this->client->instance->getMessage()}.",
+                                ['name' => $name, 'trace' => []]
+                            );
+                            $this->_stop($this->retry_interval);
                         }, function (\Exception $exception) use ($instanceRegistrar, $name) {
                             $this->logger()->error(
                                 "Nacos instance register failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                                 ['name' => $name, 'trace' => $exception->getTrace()]
                             );
-
-                            sleep($this->retry_interval);
-                            Worker::stopAll(0);
+                            $this->_stop($this->retry_interval);
                         });
                 }
                 Utils::settle($promises)->wait();
             }
-
         } catch (GuzzleException $exception) {
             $this->logger()->error(
                 "Nacos instance register failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                 ['name' => '#base', 'trace' => $exception->getTrace()]
             );
 
-            sleep($this->retry_interval);
-            Worker::stopAll(0);
+            $this->_stop($this->retry_interval);
         }
     }
 
@@ -148,21 +145,21 @@ class InstanceRegistrarProcess extends AbstractProcess
         try {
             foreach ($this->instanceRegistrars as $name => $instanceRegistrar) {
                 // 移除心跳
-                if(isset($this->heartbeatTimers[$name])){
+                if (isset($this->heartbeatTimers[$name])) {
                     Timer::del($this->heartbeatTimers[$name]);
                 }
                 list($serviceName, $ip, $port, $option) = $instanceRegistrar;
                 // 注销实例
-                if(!$this->client->instance->delete(
+                if (!$this->client->instance->delete(
                     $serviceName,
                     $option['groupName'] ?? null,
                     $ip,
                     $port,
                     [
                         'namespaceId' => $option['namespaceId'] ?? null,
-                        'ephemeral' => $option['ephemeral'] ?? null
+                        'ephemeral'   => $option['ephemeral'] ?? null,
                     ]
-                )){
+                )) {
                     $this->logger()->error(
                         "Naocs instance delete failed: [0] {$this->client->instance->getMessage()}.",
                         ['name' => $name, 'trace' => []]

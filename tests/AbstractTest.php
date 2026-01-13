@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests;
@@ -9,8 +10,8 @@ use Workbunny\WebmanNacos\Client;
 abstract class AbstractTest extends TestCase
 {
     protected array $_config = [
-        'host' => '127.0.0.1',
-        'port' => 8848,
+        'host'     => '127.0.0.1',
+        'port'     => 8848,
         'username' => null,
         'password' => null,
     ];

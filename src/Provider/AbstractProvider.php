@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -20,12 +21,14 @@ use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\RequestOptions;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
+use Workbunny\WebmanNacos\Client as NacosClient;
+
+use function Workbunny\WebmanNacos\config;
+
 use Workbunny\WebmanNacos\Traits\Authentication;
 use Workbunny\WebmanNacos\Traits\ErrorMsg;
-use Workbunny\WebmanNacos\Client as NacosClient;
 use Workerman\Http\Client as AsyncClient;
 use Workerman\Http\Response;
-use function Workbunny\WebmanNacos\config;
 
 /**
  * Class AbstractProvider
@@ -40,31 +43,31 @@ abstract class AbstractProvider
 
     public const LINE_SEPARATOR = "\x01";
 
-    /** @var NacosClient  */
+    /** @var NacosClient */
     protected NacosClient $client;
 
-    /** @var Client|null  */
+    /** @var Client|null */
     protected ?Client $httpClient = null;
 
-    /** @var AsyncClient|null  */
+    /** @var AsyncClient|null */
     protected ?AsyncClient $httpClientAsync = null;
 
-    /** @var string  */
+    /** @var string */
     protected string $host = '127.0.0.1';
 
-    /** @var int  */
+    /** @var int */
     protected int $port = 8848;
 
-    /** @var string|null  */
+    /** @var string|null */
     protected ?string $username = null;
 
-    /** @var string|null  */
+    /** @var string|null */
     protected ?string $password = null;
 
-    /** @var string|null  */
+    /** @var string|null */
     protected ?string $accessKeyId = null;
 
-    /** @var string|null  */
+    /** @var string|null */
     protected ?string $accessKeySecret = null;
 
     /**
@@ -100,19 +103,20 @@ abstract class AbstractProvider
      */
     public function httpClient(): Client
     {
-        if(!$this->httpClient instanceof Client){
+        if (!$this->httpClient instanceof Client) {
             $config = [
                 'base_uri' => sprintf('http://%s:%d', $this->host, $this->port),
-                'timeout' => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30) + 60,
-                'headers' => [
-                    'Connection' => 'keep-alive'
-                ]
+                'timeout'  => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30) + 60,
+                'headers'  => [
+                    'Connection' => 'keep-alive',
+                ],
             ];
-            if($this->client()::$mockHandler !== null){
+            if ($this->client()::$mockHandler !== null) {
                 $config['handler'] = $this->client()::$mockHandler;
             }
             $this->httpClient = new Client($config);
         }
+
         return $this->httpClient;
     }
 
@@ -122,16 +126,17 @@ abstract class AbstractProvider
      */
     public function httpClientAsync(): AsyncClient
     {
-        if(!$this->httpClientAsync instanceof AsyncClient){
+        if (!$this->httpClientAsync instanceof AsyncClient) {
             $config = [
                 'connect_timeout'   => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30),
                 'timeout'           => config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30) + 60,
             ];
-            if($this->client()::$mockHandler !== null){
+            if ($this->client()::$mockHandler !== null) {
                 $config['handler'] = $this->client()::$mockHandler;
             }
             $this->httpClientAsync = new AsyncClient($config);
         }
+
         return $this->httpClientAsync;
     }
 
@@ -157,8 +162,10 @@ abstract class AbstractProvider
                     );
                 }
             }
+
             return $this->setError(false, 'server notice：' . $exception->getMessage());
         }
+
         return $response->getBody()->getContents();
     }
 
@@ -174,6 +181,7 @@ abstract class AbstractProvider
     {
         try {
             $this->issueToken($options);
+
             return $this->httpClient()->requestAsync($method, $uri, $options);
         } catch (RequestException $exception) {
             if ($exception->hasResponse()) {
@@ -181,6 +189,7 @@ abstract class AbstractProvider
                     return $this->setError(false, $exception->getResponse()->getBody()->getContents());
                 }
             }
+
             return $this->setError(false, 'server notice：' . $exception->getMessage());
         }
     }
@@ -190,23 +199,23 @@ abstract class AbstractProvider
      * @param string $method
      * @param string $uri
      * @param array $options = [
-     *  RequestOptions::QUERY => [],
-     *  RequestOptions::HEADERS => [],
-     *  'data' => [],
-     *  'success' => function(\Workerman\Http\Response $response){},
-     *  'error' => function(\Exception $exception){}
-     * ]
+     *                       RequestOptions::QUERY => [],
+     *                       RequestOptions::HEADERS => [],
+     *                       'data' => [],
+     *                       'success' => function(\Workerman\Http\Response $response){},
+     *                       'error' => function(\Exception $exception){}
+     *                       ]
      * @return bool
      * @throws GuzzleException
      */
-    public function requestAsyncUseEventLoop(string $method, string $uri, array $options = []) : bool
+    public function requestAsyncUseEventLoop(string $method, string $uri, array $options = []): bool
     {
         try {
             # 同步阻塞获取token
             $this->issueToken($options);
             $queryString = http_build_query($options[RequestOptions::QUERY] ?? []);
             $headers = array_merge($options[RequestOptions::HEADERS] ?? [], [
-                'Connection' => 'keep-alive'
+                'Connection' => 'keep-alive',
             ]);
             $this->httpClientAsync()->request(
                 sprintf('http://%s:%d/%s?%s', $this->host, $this->port, $uri, $queryString),
@@ -215,10 +224,13 @@ abstract class AbstractProvider
                     'version'   => '1.1',
                     'headers'   => $headers,
                     'data'      => $options['data'] ?? [],
-                    'success'   => $options['success'] ?? function (Response $response) {},
-                    'error'     => $options['error'] ?? function (\Exception $exception) {}
+                    'success'   => $options['success'] ?? function (Response $response) {
+                    },
+                    'error'     => $options['error'] ?? function (\Exception $exception) {
+                    },
                 ]
             );
+
             return true;
         } catch (RequestException $exception) {
             if ($exception->hasResponse()) {
@@ -226,6 +238,7 @@ abstract class AbstractProvider
                     return $this->setError(false, $exception->getResponse()->getBody()->getContents());
                 }
             }
+
             return $this->setError(false, 'server notice：' . $exception->getMessage());
         }
     }
@@ -241,6 +254,7 @@ abstract class AbstractProvider
         } catch (\Throwable $exception) {
             throw new InvalidArgumentException($exception->getMessage(), $exception->getCode());
         }
+
         return $decode;
     }
 
@@ -263,26 +277,26 @@ abstract class AbstractProvider
     /**
      * @param array $options
      * @param array $validators = [
-     *      ['serviceName', 'is_string'],
-     *      ['port', 'is_int']
-     * ]
+     *                          ['serviceName', 'is_string'],
+     *                          ['port', 'is_int']
+     *                          ]
      * @return void
      * @throws InvalidArgumentException
      */
     protected function verify(array $options, array $validators): void
     {
-        foreach ($validators as $validator){
+        foreach ($validators as $validator) {
             list($key, $handler, $required) = $validator;
-            if(isset($options[$key])){
-                if(!function_exists($handler)){
+            if (isset($options[$key])) {
+                if (!function_exists($handler)) {
                     throw new InvalidArgumentException('Invalid Function: ' . $handler);
                 }
-                if($handler($options[$key])){
+                if ($handler($options[$key])) {
                     continue;
                 }
                 goto fail;
             }
-            if($required){
+            if ($required) {
                 fail:
                 throw new InvalidArgumentException('Invalid Argument: ' . $key);
             }

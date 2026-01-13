@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -19,17 +20,17 @@ use GuzzleHttp\RequestOptions;
 
 class ConfigProvider extends AbstractProvider
 {
-    const GET_URL = 'nacos/v1/cs/configs';
-    const GET_METHOD = 'GET';
+    public const GET_URL = 'nacos/v1/cs/configs';
+    public const GET_METHOD = 'GET';
 
-    const PUBLISH_URL = 'nacos/v1/cs/configs';
-    const PUBLISH_METHOD = 'POST';
+    public const PUBLISH_URL = 'nacos/v1/cs/configs';
+    public const PUBLISH_METHOD = 'POST';
 
-    const DELETE_URL = 'nacos/v1/cs/configs';
-    const DELETE_METHOD = 'DELETE';
+    public const DELETE_URL = 'nacos/v1/cs/configs';
+    public const DELETE_METHOD = 'DELETE';
 
-    const LISTENER_URL = 'nacos/v1/cs/configs/listener';
-    const LISTENER_METHOD = 'POST';
+    public const LISTENER_URL = 'nacos/v1/cs/configs/listener';
+    public const LISTENER_METHOD = 'POST';
 
     /**
      * 获取配置
@@ -45,8 +46,8 @@ class ConfigProvider extends AbstractProvider
             RequestOptions::QUERY => $this->filter([
                 'dataId' => $dataId,
                 'group'  => $group,
-                'tenant' => $tenant
-            ])
+                'tenant' => $tenant,
+            ]),
         ]);
     }
 
@@ -64,18 +65,18 @@ class ConfigProvider extends AbstractProvider
             RequestOptions::QUERY => $this->filter([
                 'dataId' => $dataId,
                 'group'  => $group,
-                'tenant' => $tenant
-            ])
+                'tenant' => $tenant,
+            ]),
         ]);
     }
 
     /**
      * 获取配置
      * @param array $options = [
-     *  'dataId' => 'xxx',
-     *  'group' => 'xxx',
-     *  'tenant' => 'xxx'
-     * ]
+     *                       'dataId' => 'xxx',
+     *                       'group' => 'xxx',
+     *                       'tenant' => 'xxx'
+     *                       ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -86,19 +87,19 @@ class ConfigProvider extends AbstractProvider
         $this->verify($options, [
             ['dataId', 'is_string', true],
             ['group', 'is_string', true],
-            ['tenant', 'is_string', false]
+            ['tenant', 'is_string', false],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::GET_METHOD, self::GET_URL, [
             RequestOptions::QUERY => $this->filter([
                 'dataId' => $options['dataId'] ?? null,
                 'group'  => $options['group'] ?? null,
-                'tenant' => $options['tenant'] ?? null
+                'tenant' => $options['tenant'] ?? null,
             ]),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
-
 
     /**
      * 发布配置
@@ -118,7 +119,7 @@ class ConfigProvider extends AbstractProvider
                 'group'   => $group,
                 'tenant'  => $tenant,
                 'type'    => $type,
-                'content' => $content
+                'content' => $content,
             ]),
         ]);
     }
@@ -141,7 +142,7 @@ class ConfigProvider extends AbstractProvider
                 'group'   => $group,
                 'tenant'  => $tenant,
                 'type'    => $type,
-                'content' => $content
+                'content' => $content,
             ]),
         ]);
     }
@@ -149,12 +150,12 @@ class ConfigProvider extends AbstractProvider
     /**
      * 发布配置
      * @param array $options = [
-     *  'dataId'  => $dataId,
-     *  'group'   => $group,
-     *  'tenant'  => $tenant,
-     *  'type'    => $type,
-     *  'content' => $content
-     * ]
+     *                       'dataId'  => $dataId,
+     *                       'group'   => $group,
+     *                       'tenant'  => $tenant,
+     *                       'type'    => $type,
+     *                       'content' => $content
+     *                       ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -169,16 +170,17 @@ class ConfigProvider extends AbstractProvider
             ['type', 'is_string', false],
             ['tenant', 'is_string', false],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::PUBLISH_METHOD, self::PUBLISH_URL, [
             RequestOptions::FORM_PARAMS => $this->filter([
                 'dataId'  => $options['dataId'] ?? null,
                 'group'   => $options['group'] ?? null,
                 'tenant'  => $options['tenant'] ?? null,
                 'type'    => $options['type'] ?? null,
-                'content' => $options['content'] ?? null
+                'content' => $options['content'] ?? null,
             ]),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -196,7 +198,7 @@ class ConfigProvider extends AbstractProvider
             RequestOptions::QUERY => $this->filter([
                 'dataId' => $dataId,
                 'group'  => $group,
-                'tenant' => $tenant
+                'tenant' => $tenant,
             ]),
         ]);
     }
@@ -215,7 +217,7 @@ class ConfigProvider extends AbstractProvider
             RequestOptions::QUERY => $this->filter([
                 'dataId' => $dataId,
                 'group'  => $group,
-                'tenant' => $tenant
+                'tenant' => $tenant,
             ]),
         ]);
     }
@@ -223,10 +225,10 @@ class ConfigProvider extends AbstractProvider
     /**
      * 删除配置
      * @param array $options = [
-     *  'dataId' => '',
-     *  'group'  => '',
-     *  'tenant' => '',
-     * ]
+     *                       'dataId' => '',
+     *                       'group'  => '',
+     *                       'tenant' => '',
+     *                       ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -239,6 +241,7 @@ class ConfigProvider extends AbstractProvider
             ['group', 'is_string', true],
             ['tenant', 'is_string', false],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::DELETE_METHOD, self::DELETE_URL, [
             RequestOptions::QUERY => $this->filter([
                 'dataId' => $options['dataId'] ?? null,
@@ -246,7 +249,7 @@ class ConfigProvider extends AbstractProvider
                 'tenant' => $options['tenant'] ?? null,
             ]),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -267,6 +270,7 @@ class ConfigProvider extends AbstractProvider
             $group . self::WORD_SEPARATOR .
             $contentMD5 . self::WORD_SEPARATOR .
             $tenant . self::LINE_SEPARATOR;
+
         return $this->request(self::LISTENER_METHOD, self::LISTENER_URL, [
             RequestOptions::QUERY   => [
                 'Listening-Configs' => $ListeningConfigs,
@@ -294,6 +298,7 @@ class ConfigProvider extends AbstractProvider
             $group . self::WORD_SEPARATOR .
             $contentMD5 . self::WORD_SEPARATOR .
             $tenant . self::LINE_SEPARATOR;
+
         return $this->requestAsync(self::LISTENER_METHOD, self::LISTENER_URL, [
             RequestOptions::QUERY   => [
                 'Listening-Configs' => $ListeningConfigs,
@@ -307,11 +312,11 @@ class ConfigProvider extends AbstractProvider
     /**
      * 监听配置
      * @param array $options = [
-     *  'dataId' => '',
-     *  'group' => '',
-     *  'contentMD5' => '',
-     *  'tenant' => ''
-     * ]
+     *                       'dataId' => '',
+     *                       'group' => '',
+     *                       'contentMD5' => '',
+     *                       'tenant' => ''
+     *                       ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -324,6 +329,7 @@ class ConfigProvider extends AbstractProvider
             ($options['group'] ?? null) . self::WORD_SEPARATOR .
             ($options['contentMD5'] ?? null) . self::WORD_SEPARATOR .
             ($options['tenant'] ?? null) . self::LINE_SEPARATOR;
+
         return $this->requestAsyncUseEventLoop(self::LISTENER_METHOD, self::LISTENER_URL, [
             RequestOptions::QUERY   => [
                 'Listening-Configs' => $ListeningConfigs,
@@ -332,7 +338,7 @@ class ConfigProvider extends AbstractProvider
                 'Long-Pulling-Timeout' => $timeout ?? config('plugin.workbunny.webman-nacos.app.long_pulling_timeout'),
             ],
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 }

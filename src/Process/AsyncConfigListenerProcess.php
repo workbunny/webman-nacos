@@ -1,14 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Workbunny\WebmanNacos\Process;
 
 use GuzzleHttp\Exception\GuzzleException;
-use support\Log;
-use Workerman\Http\Response;
-use Workbunny\WebmanNacos\Timer;
-use Workerman\Worker;
+
 use function Workbunny\WebmanNacos\reload;
+
+use Workbunny\WebmanNacos\Timer;
+use Workerman\Http\Response;
+use Workerman\Worker;
 
 /**
  * 多Timer异步监听器
@@ -25,10 +27,10 @@ class AsyncConfigListenerProcess extends AbstractProcess
     /** @var int 长轮询间隔 秒 */
     protected int $longPullingInterval;
 
-    /** @var array  */
+    /** @var array */
     protected array $configListeners;
 
-    /** @var array  */
+    /** @var array */
     protected array $timers = [];
 
     /**
@@ -38,7 +40,7 @@ class AsyncConfigListenerProcess extends AbstractProcess
     {
         parent::__construct();
         $this->longPullingInterval = config('plugin.workbunny.webman-nacos.app.long_pulling_interval', 30);
-        $this->configListeners = config('plugin.workbunny.webman-nacos.app.config_listeners', []);
+        $this->configListeners = config('plugin.workbunny.webman-nacos.listeners', []);
     }
 
     /**
@@ -48,17 +50,18 @@ class AsyncConfigListenerProcess extends AbstractProcess
      * @param string $path
      * @throws GuzzleException
      */
-    protected function _get(string $dataId, string $group, string $tenant, string $path)
+    protected function _get(string $dataId, string $group, string $tenant, string $path): void
     {
         $res = $this->client->config->get($dataId, $group, $tenant);
-        if (false === $res){
+        if (false === $res) {
             $this->logger()->error(
                 "Nacos listener failed: [1] {$this->client->config->getMessage()}.",
                 ['dataId' => $dataId, 'trace' => []]
             );
+
             return;
         }
-        if(file_put_contents($path, $res, LOCK_EX)){
+        if (file_put_contents($path, $res, LOCK_EX)) {
             reload($path);
         }
     }
@@ -72,45 +75,44 @@ class AsyncConfigListenerProcess extends AbstractProcess
     {
         $worker->count = 1;
 
-        if($this->configListeners){
+        if ($this->configListeners) {
             // 拉取配置项文件
-            foreach ($this->configListeners as $listener){
+            foreach ($this->configListeners as $listener) {
                 list($dataId, $group, $tenant, $configPath) = $listener;
-                if(!file_exists($configPath)){
+                if (!file_exists($configPath)) {
                     $this->_get($dataId, $group, $tenant, $configPath);
                 }
-                $this->timers[$dataId] = Timer::add(0.0,
-                    (float)$this->longPullingInterval,
-                    function () use($dataId, $group, $tenant, $configPath){
+                $this->timers[$dataId] = Timer::add(
+                    0.0,
+                    (float) $this->longPullingInterval,
+                    function () use ($dataId, $group, $tenant, $configPath) {
                         $this->client->config->listenerAsyncUseEventLoop([
-                                'dataId' => $dataId,
-                                'group' => $group,
+                                'dataId'     => $dataId,
+                                'group'      => $group,
                                 'contentMD5' => md5(file_get_contents($configPath)),
-                                'tenant' => $tenant
-                        ], function (Response $response) use($dataId, $group, $tenant, $configPath){
-                            if($response->getStatusCode() === 200){
-                                if((string)$response->getBody() !== ''){
+                                'tenant'     => $tenant,
+                        ], function (Response $response) use ($dataId, $group, $tenant, $configPath) {
+                            if ($response->getStatusCode() === 200) {
+                                if ((string) $response->getBody() !== '') {
                                     $this->_get($dataId, $group, $tenant, $configPath);
                                 }
-                            }else{
-                                $this->logger()->error(
-                                    "Nacos listener failed: [0] {$this->client->config->getMessage()}.",
-                                    ['dataId' => $dataId, 'trace' => []]
-                                );
 
-                                sleep($this->retry_interval);
-                                Worker::stopAll(0);
+                                return;
                             }
-                        }, function (\Exception $exception) use($dataId) {
+                            $this->logger()->error(
+                                "Nacos listener failed: [0] {$this->client->config->getMessage()}.",
+                                ['dataId' => $dataId, 'trace' => []]
+                            );
+                            $this->_stop($this->retry_interval);
+                        }, function (\Exception $exception) use ($dataId) {
                             $this->logger()->error(
                                 "Nacos listener failed: [{$exception->getCode()}] {$exception->getMessage()}.",
                                 ['dataId' => $dataId, 'trace' => $exception->getTrace()]
                             );
-
-                            sleep($this->retry_interval);
-                            Worker::stopAll(0);
+                            $this->_stop($this->retry_interval);
                         });
-                });
+                    }
+                );
             }
         }
     }
@@ -118,9 +120,10 @@ class AsyncConfigListenerProcess extends AbstractProcess
     /**
      * @inheritDoc
      */
-    public function onWorkerStop(Worker $worker){
-        foreach ($this->timers as $timer){
-            if(is_int($timer)){
+    public function onWorkerStop(Worker $worker)
+    {
+        foreach ($this->timers as $timer) {
+            if (is_int($timer)) {
                 Timer::del($timer);
             }
         }

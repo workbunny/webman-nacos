@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests;
@@ -13,10 +14,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testRegister(){
+    public function testRegister()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->register('127.0.0.1', 8000, 'test', [
-            'groupName' => 'testGroup'
+            'groupName' => 'testGroup',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -48,10 +50,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testRegisterAsync(){
+    public function testRegisterAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->registerAsync('127.0.0.1', 8000, 'test', [
-            'groupName' => 'testGroup'
+            'groupName' => 'testGroup',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -83,10 +86,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testDelete(){
+    public function testDelete()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
-        $this->client()->instance->delete('test','testGroup','127.0.0.1', 8000, [
-            'namespaceId' => 'testNamespace'
+        $this->client()->instance->delete('test', 'testGroup', '127.0.0.1', 8000, [
+            'namespaceId' => 'testNamespace',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -118,10 +122,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testDeleteAsync(){
+    public function testDeleteAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
-        $this->client()->instance->deleteAsync('test','testGroup','127.0.0.1', 8000, [
-            'namespaceId' => 'testNamespace'
+        $this->client()->instance->deleteAsync('test', 'testGroup', '127.0.0.1', 8000, [
+            'namespaceId' => 'testNamespace',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -153,10 +158,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testUpdate(){
+    public function testUpdate()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->update('127.0.0.1', 8000, 'test', [
-            'groupName' => 'testGroup'
+            'groupName' => 'testGroup',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -188,10 +194,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testUpdateAsync(){
+    public function testUpdateAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->updateAsync('127.0.0.1', 8000, 'test', [
-            'groupName' => 'testGroup'
+            'groupName' => 'testGroup',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -223,10 +230,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testDetail(){
+    public function testDetail()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->detail('127.0.0.1', 8000, 'test', [
-            'groupName' => 'testGroup'
+            'groupName' => 'testGroup',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -258,10 +266,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testDetailAsync(){
+    public function testDetailAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->detailAsync('127.0.0.1', 8000, 'test', [
-            'groupName' => 'testGroup'
+            'groupName' => 'testGroup',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -293,10 +302,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testUpdateHealth(){
+    public function testUpdateHealth()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->updateHealth('127.0.0.1', 8000, 'test', true, [
-            'groupName' => 'testGroup'
+            'groupName' => 'testGroup',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -328,10 +338,11 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testUpdateHealthAsync(){
+    public function testUpdateHealthAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->updateHealthAsync('127.0.0.1', 8000, 'test', true, [
-            'groupName' => 'testGroup'
+            'groupName' => 'testGroup',
         ]);
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -363,12 +374,13 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testBeat(){
+    public function testBeat()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->beat('test', [
-            'ip' => '127.0.0.1',
-            'port' => 8000,
-            'serviceName' => 'test'
+            'ip'          => '127.0.0.1',
+            'port'        => 8000,
+            'serviceName' => 'test',
         ], 'testGroup', 'testNamespace');
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -400,12 +412,13 @@ class InstanceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testBeatAsync(){
+    public function testBeatAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->instance->beatAsync('test', [
-            'ip' => '127.0.0.1',
-            'port' => 8000,
-            'serviceName' => 'test'
+            'ip'          => '127.0.0.1',
+            'port'        => 8000,
+            'serviceName' => 'test',
         ], 'testGroup', 'testNamespace');
 
         $request = $this->client()::$mockHandler->getLastRequest();
@@ -431,5 +444,4 @@ class InstanceTest extends AbstractTest
             $request->getMethod()
         );
     }
-
 }

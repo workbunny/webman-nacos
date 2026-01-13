@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -41,10 +42,12 @@ trait Authentication
     {
         if ($this->username === null || $this->password === null) {
             $this->mseAuth($options);
+
             return;
         }
         if (!$this->isExpired()) {
             $options[RequestOptions::QUERY]['accessToken'] = $this->accessToken;
+
             return;
         }
 
@@ -66,6 +69,7 @@ trait Authentication
         if (isset($this->accessToken) && $this->expireTime > time() + 60) {
             return false;
         }
+
         return true;
     }
 
@@ -83,18 +87,16 @@ trait Authentication
         $paramsToSign = $options[RequestOptions::QUERY] ?? $options[RequestOptions::FORM_PARAMS] ?? [];
 
         $signStr = '';
-        $millisecondTs = (int)(microtime(true) * 1000);
-
+        $millisecondTs = (int) (microtime(true) * 1000);
 
         // config signature
-        if (isset($paramsToSign['tenant'])&&$paramsToSign['tenant']) {
+        if (isset($paramsToSign['tenant']) && $paramsToSign['tenant']) {
             $signStr .= $paramsToSign['tenant'] . '+';
         }
-        if (isset($paramsToSign['group'])&&$paramsToSign['group']) {
+        if (isset($paramsToSign['group']) && $paramsToSign['group']) {
             $signStr .= $paramsToSign['group'] . '+';
         }
         $signStr .= $millisecondTs;
-
 
         // naming signature
         if (isset($paramsToSign['serviceName'])) {
@@ -113,15 +115,15 @@ trait Authentication
 
         // config增加header
         $options[RequestOptions::HEADERS] = [
-                'timeStamp' => $millisecondTs,
+                'timeStamp'      => $millisecondTs,
                 'Spas-AccessKey' => $this->accessKeyId,
                 'Spas-Signature' => $signature,
             ] + ($options[RequestOptions::HEADERS] ?? []);
 
         // naming增加query
         $options[RequestOptions::QUERY] = [
-                'data' => $signStr,
-                'ak' => $this->accessKeyId,
+                'data'      => $signStr,
+                'ak'        => $this->accessKeyId,
                 'signature' => $signature,
             ] + ($options[RequestOptions::QUERY] ?? []);
     }

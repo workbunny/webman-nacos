@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -16,12 +17,11 @@ namespace Workbunny\WebmanNacos;
 use GuzzleHttp\Handler\MockHandler;
 use Workbunny\WebmanNacos\Exception\NacosException;
 use Workbunny\WebmanNacos\Exception\PluginDisableException;
+use Workbunny\WebmanNacos\Provider\AuthProvider;
 use Workbunny\WebmanNacos\Provider\ConfigProvider;
 use Workbunny\WebmanNacos\Provider\InstanceProvider;
 use Workbunny\WebmanNacos\Provider\OperatorProvider;
 use Workbunny\WebmanNacos\Provider\ServiceProvider;
-use Workbunny\WebmanNacos\Provider\AuthProvider;
-use function Workbunny\WebmanNacos\config;
 
 /**
  * Class NacosClient
@@ -34,7 +34,7 @@ use function Workbunny\WebmanNacos\config;
  */
 class Client
 {
-    /** @var MockHandler|null  */
+    /** @var MockHandler|null */
     public static ?MockHandler $mockHandler = null;
     /** @var bool debug mode */
     public static bool $debug = false;
@@ -50,13 +50,13 @@ class Client
         'config'   => ConfigProvider::class,
         'instance' => InstanceProvider::class,
         'operator' => OperatorProvider::class,
-        'service'  => ServiceProvider::class
+        'service'  => ServiceProvider::class,
     ];
 
-    /** @var array  */
+    /** @var array */
     protected array $configs = [];
 
-    /** @var array  */
+    /** @var array */
     protected array $providers = [];
 
     /**
@@ -75,9 +75,10 @@ class Client
             throw new PluginDisableException();
         }
         $channel = config('plugin.workbunny.webman-nacos.channel', []);
-        if(empty($config = $channel[$name] ?? [])){
+        if (empty($config = $channel[$name] ?? [])) {
             throw new NacosException("Channel config $name is invalid.");
         }
+
         return self::$clients[$name] ?? (self::$clients[$name] = new static($config));
     }
 
@@ -86,7 +87,7 @@ class Client
      */
     public function cancel(): void
     {
-        if($name = $this->getName() and isset(self::$clients[$name])){
+        if ($name = $this->getName() and isset(self::$clients[$name])) {
             unset(self::$clients[$name]);
         }
     }
@@ -94,11 +95,11 @@ class Client
     /**
      * NacosClient constructor.
      * @param array|null $config = [
-     *  'host' => '',
-     *  'port' => 8848,
-     *  'username' => '',
-     *  'password' => ''
-     * ]
+     *                           'host' => '',
+     *                           'port' => 8848,
+     *                           'username' => '',
+     *                           'password' => ''
+     *                           ]
      */
     public function __construct(?array $config = null)
     {
@@ -136,9 +137,9 @@ class Client
             return $this->providers[$name];
         }
         $class = $this->alias[$name];
+
         return $this->providers[$name] = $this->getConfigs() ?
             new $class($this, $this->getConfigs()) :
             new $class($this);
     }
-
 }

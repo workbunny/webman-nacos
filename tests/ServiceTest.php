@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests;
@@ -13,11 +14,12 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testCreate(){
+    public function testCreate()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->create('test', [
-            'groupName' => 'testGroup',
-            'namespaceId' => 'testNamespace',
+            'groupName'        => 'testGroup',
+            'namespaceId'      => 'testNamespace',
             'protectThreshold' => 0.99,
         ]);
 
@@ -50,11 +52,12 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testCreateAsync(){
+    public function testCreateAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->createAsync('test', [
-            'groupName' => 'testGroup',
-            'namespaceId' => 'testNamespace',
+            'groupName'        => 'testGroup',
+            'namespaceId'      => 'testNamespace',
             'protectThreshold' => 0.99,
         ]);
 
@@ -87,7 +90,8 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testDelete(){
+    public function testDelete()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->delete('test', 'testGroup', 'testNamespace');
 
@@ -120,7 +124,8 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testDeleteAsync(){
+    public function testDeleteAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->deleteAsync('test', 'testGroup', 'testNamespace');
 
@@ -153,11 +158,12 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testUpdate(){
+    public function testUpdate()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->update('test', [
-            'groupName' => 'testGroup',
-            'namespaceId' => 'testNamespace',
+            'groupName'        => 'testGroup',
+            'namespaceId'      => 'testNamespace',
             'protectThreshold' => 0.99,
         ]);
 
@@ -190,11 +196,12 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testUpdateAsync(){
+    public function testUpdateAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->updateAsync('test', [
-            'groupName' => 'testGroup',
-            'namespaceId' => 'testNamespace',
+            'groupName'        => 'testGroup',
+            'namespaceId'      => 'testNamespace',
             'protectThreshold' => 0.99,
         ]);
 
@@ -227,7 +234,8 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGet(){
+    public function testGet()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->get('test', 'testGroup', 'testNamespace');
 
@@ -260,7 +268,8 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetAsync(){
+    public function testGetAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->getAsync('test', 'testGroup', 'testNamespace');
 
@@ -293,7 +302,8 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testList(){
+    public function testList()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->list(1, 10, 'testGroup', 'testNamespace');
 
@@ -326,7 +336,8 @@ class ServiceTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testListAsync(){
+    public function testListAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->service->listAsync(1, 10, 'testGroup', 'testNamespace');
 
@@ -353,5 +364,4 @@ class ServiceTest extends AbstractTest
             $request->getMethod()
         );
     }
-
 }

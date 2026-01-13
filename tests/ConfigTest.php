@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests;
@@ -13,7 +14,8 @@ class ConfigTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testConfigGet(){
+    public function testConfigGet()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->config->get('testId', 'testGroup', 'testTenant');
 
@@ -46,7 +48,8 @@ class ConfigTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testConfigGetAsync(){
+    public function testConfigGetAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->config->getAsync('testId', 'testGroup', 'testTenant');
 
@@ -74,13 +77,13 @@ class ConfigTest extends AbstractTest
         );
     }
 
-
     /**
      * @covers \Workbunny\WebmanNacos\Provider\ConfigProvider::publish
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testConfigPublish(){
+    public function testConfigPublish()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->config->publish('testId', 'testGroup', 'testContent', 'testType', 'testTenant');
 
@@ -113,7 +116,8 @@ class ConfigTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testConfigPublishAsync(){
+    public function testConfigPublishAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->config->publishAsync('testId', 'testGroup', 'testContent', 'testType', 'testTenant');
 
@@ -146,7 +150,8 @@ class ConfigTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testConfigDelete(){
+    public function testConfigDelete()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->config->delete('testId', 'testGroup', 'testTenant');
 
@@ -179,7 +184,8 @@ class ConfigTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testConfigDeleteAsync(){
+    public function testConfigDeleteAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->config->deleteAsync('testId', 'testGroup', 'testTenant');
 
@@ -212,7 +218,8 @@ class ConfigTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testConfigListener(){
+    public function testConfigListener()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->config->listener('testId', 'testGroup', 'testMD5', 'testTenant', 60);
 
@@ -249,7 +256,8 @@ class ConfigTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testConfigListenerAsync(){
+    public function testConfigListenerAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->config->listenerAsync('testId', 'testGroup', 'testMD5', 'testTenant', 60);
 
@@ -280,5 +288,4 @@ class ConfigTest extends AbstractTest
             $request->getMethod()
         );
     }
-
 }

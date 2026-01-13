@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of workbunny.
  *
@@ -19,20 +20,20 @@ use GuzzleHttp\RequestOptions;
 
 class OperatorProvider extends AbstractProvider
 {
-    const GET_SWITCHES_URL = 'nacos/v1/ns/operator/switches';
-    const GET_SWITCHES_METHOD = 'GET';
+    public const GET_SWITCHES_URL = 'nacos/v1/ns/operator/switches';
+    public const GET_SWITCHES_METHOD = 'GET';
 
-    const UPDATE_SWITCHES_URL = 'nacos/v1/ns/operator/switches';
-    const UPDATE_SWITCHES_METHOD = 'PUT';
+    public const UPDATE_SWITCHES_URL = 'nacos/v1/ns/operator/switches';
+    public const UPDATE_SWITCHES_METHOD = 'PUT';
 
-    const GET_METRICS_URL = 'nacos/v1/ns/operator/metrics';
-    const GET_METRICS_METHOD = 'GET';
+    public const GET_METRICS_URL = 'nacos/v1/ns/operator/metrics';
+    public const GET_METRICS_METHOD = 'GET';
 
-    const GET_SERVERS_URL = 'nacos/v1/ns/operator/servers';
-    const GET_SERVERS_METHOD = 'GET';
+    public const GET_SERVERS_URL = 'nacos/v1/ns/operator/servers';
+    public const GET_SERVERS_METHOD = 'GET';
 
-    const GET_LEADER_URL = 'nacos/v1/ns/raft/leader';
-    const GET_LEADER_METHOD = 'GET';
+    public const GET_LEADER_URL = 'nacos/v1/ns/raft/leader';
+    public const GET_LEADER_METHOD = 'GET';
 
     /**
      * @return bool|string
@@ -62,7 +63,7 @@ class OperatorProvider extends AbstractProvider
     {
         return $this->requestAsyncUseEventLoop(self::GET_SWITCHES_METHOD, self::GET_SWITCHES_URL, [
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -104,10 +105,10 @@ class OperatorProvider extends AbstractProvider
 
     /**
      * @param array $options = [
-     *      'entry' => '',
-     *      'value' => '',
-     *      'debug' => false
-     * ]
+     *                       'entry' => '',
+     *                       'value' => '',
+     *                       'debug' => false
+     *                       ]
      * @param callable|null $success = function(\Workerman\Http\Response $response){}
      * @param callable|null $error = function(\Exception $exception){}
      * @return bool
@@ -118,8 +119,9 @@ class OperatorProvider extends AbstractProvider
         $this->verify($options, [
             ['entry', 'is_string', true],
             ['value', 'is_string', true],
-            ['debug', 'is_bool', false]
+            ['debug', 'is_bool', false],
         ]);
+
         return $this->requestAsyncUseEventLoop(self::UPDATE_SWITCHES_METHOD, self::UPDATE_SWITCHES_URL, [
             RequestOptions::QUERY => $this->filter([
                 'entry' => $options['entry'] ?? null,
@@ -127,7 +129,7 @@ class OperatorProvider extends AbstractProvider
                 'debug' => $options['debug'] ?? null,
             ]),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -159,7 +161,7 @@ class OperatorProvider extends AbstractProvider
     {
         return $this->requestAsyncUseEventLoop(self::GET_METRICS_METHOD, self::GET_METRICS_URL, [
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -205,7 +207,7 @@ class OperatorProvider extends AbstractProvider
                 'healthy' => $healthy,
             ]),
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 
@@ -237,7 +239,7 @@ class OperatorProvider extends AbstractProvider
     {
         return $this->requestAsync(self::GET_LEADER_METHOD, self::GET_LEADER_URL, [
             OPTIONS_SUCCESS => $success,
-            OPTIONS_ERROR => $error
+            OPTIONS_ERROR   => $error,
         ]);
     }
 }

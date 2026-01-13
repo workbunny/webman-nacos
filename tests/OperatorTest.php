@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests;
@@ -13,7 +14,8 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetSwitches(){
+    public function testGetSwitches()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->operator->getSwitches();
 
@@ -46,7 +48,8 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetSwitchesAsync(){
+    public function testGetSwitchesAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->operator->getSwitchesAsync();
 
@@ -79,9 +82,10 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testUpdateSwitches(){
+    public function testUpdateSwitches()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
-        $this->client()->operator->updateSwitches('entry','value', true);
+        $this->client()->operator->updateSwitches('entry', 'value', true);
 
         $request = $this->client()::$mockHandler->getLastRequest();
 
@@ -112,9 +116,10 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testUpdateSwitchesAsync(){
+    public function testUpdateSwitchesAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
-        $this->client()->operator->updateSwitchesAsync('entry','value', true);
+        $this->client()->operator->updateSwitchesAsync('entry', 'value', true);
 
         $request = $this->client()::$mockHandler->getLastRequest();
 
@@ -145,7 +150,8 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetMetrics(){
+    public function testGetMetrics()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->operator->getMetrics();
 
@@ -178,7 +184,8 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetMetricsAsync(){
+    public function testGetMetricsAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->operator->getMetricsAsync();
 
@@ -211,7 +218,8 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetServers(){
+    public function testGetServers()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->operator->getServers(true);
 
@@ -244,7 +252,8 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetServersAsync(){
+    public function testGetServersAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->operator->getServersAsync(true);
 
@@ -277,7 +286,8 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetLeader(){
+    public function testGetLeader()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->operator->getLeader();
 
@@ -310,7 +320,8 @@ class OperatorTest extends AbstractTest
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function testGetLeaderAsync(){
+    public function testGetLeaderAsync()
+    {
         $this->client()::$mockHandler = new MockHandler([new Response()]);
         $this->client()->operator->getLeaderAsync();
 
@@ -337,5 +348,4 @@ class OperatorTest extends AbstractTest
             $request->getMethod()
         );
     }
-
 }
