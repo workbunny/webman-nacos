@@ -14,14 +14,4 @@ return [
     'process_retry_interval' => 5,
     /* 日志 channel，为 null 时使用默认通道 */
     'log_channel' => null, // 'error',
-    /*
-     * 配置文件监听器
-     * @desc 可在config/plugin/workbunny/webman-nacos/process.php中进行修改以下两种监听器
-     * @see \Workbunny\WebmanNacos\Process\ConfigListenerProcess 单Timer同步监听器
-     * @see \Workbunny\WebmanNacos\Process\AsyncConfigListenerProcess 多Timer异步监听器
-     */
-    'config_listeners' => [
-
-        # 以下可以新增多个数组
-    ],
 ];

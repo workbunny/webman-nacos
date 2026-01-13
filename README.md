@@ -71,12 +71,6 @@ $client = \Workbunny\WebmanNacos\Client::channel('ABC');
 
 > **注：获取一个不存在的配置信息时，会抛出一个 NacosException 异常。**
 
-```php
-// 旧版保留方式【不建议使用】
-$client = new Workbunny\WebmanNacos\Client();
-```
-> **注：该方案默认使用app.php中的连接配置，后续会将其移除，不建议继续使用！**
-
 2. 以监听配置举例
 ```php
    
@@ -103,6 +97,8 @@ $client->cancel();
 1. app.php 为基础配置；
 2. channel.php 为连接通道配置；
 3. process.php 为默认启动进程配置；
+4. listeners.php 为监听配置文件；
+5. registrars.php 为注册配置文件；
 
 ### 3. Nacos相关服务
 #### 配置相关
@@ -110,7 +106,7 @@ $client->cancel();
 - 监听配置 
 
 webman-nacos组件默认会启动一个名为 **config-listener** 的进程，用于监听在配置文件
-**plugin/workbunny/webman-nacos/app.php** 中 **config_listeners**
+**plugin/workbunny/webman-nacos/listeners.php**
 下的配置内容。
 
 如果想自行掌控调用，可以使用如下服务：
@@ -167,7 +163,7 @@ if (false === $response) {
 - 实例注册
 
 webman-nacos组件默认会启动一个名为 **instance-registrar** 的进程，用于注册在配置文件
-**plugin/workbunny/webman-nacos/app.php** 中 **instance-registrar**
+**plugin/workbunny/webman-nacos/registrars.php**
 下的配置内容。
 
 如需动态注册实例，请使用：

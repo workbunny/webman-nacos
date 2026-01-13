@@ -102,7 +102,10 @@ class InstanceRegistrarProcess extends AbstractProcess
                 $promises = [];
                 foreach ($instanceRegistrars as $name => $instanceRegistrar) {
                     // 拆解配置
-                    list($serviceName, $ip, $port, $option) = $instanceRegistrar;
+                    $serviceName = $instanceRegistrar['service_name'];
+                    $ip = $instanceRegistrar['pod_ip'];
+                    $port = $instanceRegistrar['pod_port'];
+                    $option = $instanceRegistrar['options'] ?? [];
                     // 注册
                     $promises[] = $this->client->instance->registerAsync($ip, $port, $serviceName, $option)
                         ->then(function (ResponseInterface $response) use ($instanceRegistrar, $name) {

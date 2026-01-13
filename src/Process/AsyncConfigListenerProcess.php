@@ -78,7 +78,10 @@ class AsyncConfigListenerProcess extends AbstractProcess
         if ($this->configListeners) {
             // 拉取配置项文件
             foreach ($this->configListeners as $listener) {
-                list($dataId, $group, $tenant, $configPath) = $listener;
+                $dataId = $listener['data_id'];
+                $group = $listener['group'];
+                $tenant = $listener['namespace_id'];
+                $configPath = $listener['config_path'];
                 if (!file_exists($configPath)) {
                     $this->_get($dataId, $group, $tenant, $configPath);
                 }

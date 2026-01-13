@@ -3,10 +3,17 @@
 declare(strict_types=1);
 
 return [
-    'config' => [
-        'data_id'      => 'config.yaml',
-        'group_name'   => '{your_group_name}',
-        'namespace_id' => '{your_namespace_id}',
-        'file_path'    => base_path(),
+    'main' => [
+        'service_name' => '{your_service_name}',
+        'pod_id'       => '{your_pod_id}',
+        'pod_port'     => '{your_pod_port}',
+
+        /** optional @see \Workbunny\WebmanNacos\Provider\InstanceProvider::registerAsync() */
+        'options'      => [
+            'groupName'   => 'DEFAULT_GROUP',
+            'namespaceId' => '{your_namespace_id}',
+            'enabled'     => 'true',
+            'ephemeral'   => 'false',
+        ],
     ],
 ];
