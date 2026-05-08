@@ -217,13 +217,25 @@ abstract class AbstractProvider
             $headers = array_merge($options[RequestOptions::HEADERS] ?? [], [
                 'Connection' => 'keep-alive',
             ]);
+            // 兼容 Guzzle 的 FORM_PARAMS / JSON / BODY，映射到 workerman/http-client 的 data
+            $data = [];
+            if (isset($options[RequestOptions::FORM_PARAMS])) {
+                $data = $options[RequestOptions::FORM_PARAMS];
+            } elseif (isset($options[RequestOptions::JSON])) {
+                $data = json_encode($options[RequestOptions::JSON]);
+                $headers['Content-Type'] = 'application/json';
+            } elseif (isset($options[RequestOptions::BODY])) {
+                $data = $options[RequestOptions::BODY];
+            } elseif (isset($options['data'])) {
+                $data = $options['data'];
+            }
             $this->httpClientAsync()->request(
                 sprintf('http://%s:%d/%s?%s', $this->host, $this->port, $uri, $queryString),
                 [
                     'method'    => $method,
                     'version'   => '1.1',
                     'headers'   => $headers,
-                    'data'      => $options['data'] ?? [],
+                    'data'      => $data,
                     'success'   => $options['success'] ?? function (Response $response) {
                     },
                     'error'     => $options['error'] ?? function (\Exception $exception) {

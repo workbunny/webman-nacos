@@ -46,7 +46,7 @@ abstract class AbstractProcess
         if ($sleep > 0) {
             Timer::add($sleep, function () {
                 Worker::stopAll();
-            });
+            }, [], false);
 
             return;
         }

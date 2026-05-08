@@ -7,6 +7,6 @@ return [
         'data_id'      => 'config.yaml',
         'group_name'   => '{your_group_name}',
         'namespace_id' => '{your_namespace_id}',
-        'file_path'    => base_path() . '/config.yaml',
+        'config_path'    => base_path() . '/config.yaml',
     ],
 ];

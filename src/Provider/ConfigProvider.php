@@ -329,6 +329,7 @@ class ConfigProvider extends AbstractProvider
             ($options['group'] ?? null) . self::WORD_SEPARATOR .
             ($options['contentMD5'] ?? null) . self::WORD_SEPARATOR .
             ($options['tenant'] ?? null) . self::LINE_SEPARATOR;
+        $timeout = $options['timeout'] ?? null;
 
         return $this->requestAsyncUseEventLoop(self::LISTENER_METHOD, self::LISTENER_URL, [
             RequestOptions::QUERY   => [

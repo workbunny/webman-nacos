@@ -157,7 +157,7 @@ class ServiceProvider extends AbstractProvider
             ['namespaceId', 'is_string', false],
         ]);
 
-        return $this->requestAsync(self::DELETE_METHOD, self::DELETE_URL, [
+        return $this->requestAsyncUseEventLoop(self::DELETE_METHOD, self::DELETE_URL, [
             RequestOptions::QUERY => $this->filter([
                 'serviceName' => $options['serviceName'] ?? null,
                 'groupName'   => $options['groupName'] ?? null,
@@ -226,7 +226,7 @@ class ServiceProvider extends AbstractProvider
      */
     public function updateAsyncUseEventLoop(string $serviceName, array $optional = [], ?callable $success = null, ?callable $error = null): bool
     {
-        return $this->requestAsync(self::UPDATE_METHOD, self::UPDATE_URL, [
+        return $this->requestAsyncUseEventLoop(self::UPDATE_METHOD, self::UPDATE_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'serviceName' => $serviceName,
             ])),
@@ -290,7 +290,7 @@ class ServiceProvider extends AbstractProvider
             ['namespaceId', 'is_string', false],
         ]);
 
-        return $this->requestAsync(self::GET_METHOD, self::GET_URL, [
+        return $this->requestAsyncUseEventLoop(self::GET_METHOD, self::GET_URL, [
             RequestOptions::QUERY => $this->filter([
                 'serviceName' => $options['serviceName'] ?? null,
                 'groupName'   => $options['groupName'] ?? null,
@@ -362,7 +362,7 @@ class ServiceProvider extends AbstractProvider
             ['namespaceId', 'is_string', false],
         ]);
 
-        return $this->requestAsync(self::LIST_METHOD, self::LIST_URL, [
+        return $this->requestAsyncUseEventLoop(self::LIST_METHOD, self::LIST_URL, [
             RequestOptions::QUERY => $this->filter([
                 'pageNo'      => $options['pageNo'] ?? null,
                 'pageSize'    => $options['pageSize'] ?? null,

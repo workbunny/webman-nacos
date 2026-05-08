@@ -38,11 +38,35 @@ function reload(string $file): bool
 /**
  * 获取本机ip
  *
- * @return string
+ * 优先级：本地DNS解析（过滤回环） > 外部服务探测
+ *
+ * @return string 非回环IP，获取失败返回空字符串
  */
 function get_local_ip(): string
 {
-    return trim(shell_exec('curl -s ifconfig.me'));
+    // 1. 通过本地DNS解析获取
+    $ips = gethostbynamel(gethostname());
+    if ($ips !== false) {
+        // 过滤回环地址，优先 IPv4
+        $ips = array_values(array_filter($ips, function (string $ip): bool {
+            return $ip !== '127.0.0.1' && $ip !== '::1';
+        }));
+        if ($ips) {
+            // 多网卡时优先取私有地址（10.x / 172.16-31.x / 192.168.x），更可能是实际通信IP
+            $private = array_filter($ips, function (string $ip): bool {
+                return (bool) preg_match('/^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.)/', $ip);
+            });
+            return $private ? array_pop($private) : array_pop($ips);
+        }
+    }
+
+    // 2. fallback: 通过外部服务获取公网IP（适用于容器/云主机 where hostname 无法解析出内网IP）
+    $ip = trim((string) shell_exec('curl -s --connect-timeout 3 --max-time 5 ifconfig.me 2>/dev/null'));
+    if ($ip !== '' && filter_var($ip, FILTER_VALIDATE_IP)) {
+        return $ip;
+    }
+
+    return '';
 }
 
 /**
