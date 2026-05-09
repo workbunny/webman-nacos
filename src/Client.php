@@ -129,7 +129,7 @@ class Client
      */
     public function __get($name)
     {
-        if (!isset($name) || !isset($this->alias[$name])) {
+        if (!is_string($name) || $name === '' || !isset($this->alias[$name])) {
             throw new NacosException("{$name} is invalid.");
         }
 

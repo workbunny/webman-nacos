@@ -237,7 +237,7 @@ class OperatorProvider extends AbstractProvider
      */
     public function getLeaderAsyncUseEventLoop(?callable $success = null, ?callable $error = null): bool
     {
-        return $this->requestAsync(self::GET_LEADER_METHOD, self::GET_LEADER_URL, [
+        return $this->requestAsyncUseEventLoop(self::GET_LEADER_METHOD, self::GET_LEADER_URL, [
             OPTIONS_SUCCESS => $success,
             OPTIONS_ERROR   => $error,
         ]);

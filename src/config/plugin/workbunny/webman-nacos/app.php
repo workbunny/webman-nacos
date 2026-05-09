@@ -10,6 +10,8 @@ return [
     'long_pulling_interval'  => 30,
     /* float 实例心跳间隔 秒 */
     'instance_heartbeat' => 5.0,
+    /* int 实例心跳连续失败达该次数后才重启进程，避免偶发抖动导致服务摘除 */
+    'instance_heartbeat_fail_max' => 3,
     /* int 进程重试间隔 秒 */
     'process_retry_interval' => 5,
     /* 日志 channel，为 null 时使用默认通道 */

@@ -82,7 +82,10 @@ class ConfigListenerProcess extends AbstractProcess
             Timer::add(0.0, (float) $this->longPullingInterval, function () {
                 $promises = [];
                 foreach ($this->configListeners as $listener) {
-                    list($dataId, $group, $tenant, $configPath) = $listener;
+                    $dataId = $listener['data_id'];
+                    $group = $listener['group_name'];
+                    $tenant = $listener['namespace_id'];
+                    $configPath = $listener['config_path'] ?? $listener['file_path'] ?? null;
                     if (file_exists($configPath)) {
                         $promises[] = $this->client->config->listenerAsync(
                             $dataId,

@@ -420,7 +420,7 @@ class InstanceProvider extends AbstractProvider
      */
     public function detailAsync(string $ip, int $port, string $serviceName, array $optional = [])
     {
-        return $this->request(self::DETAIL_METHOD, self::DETAIL_URL, [
+        return $this->requestAsync(self::DETAIL_METHOD, self::DETAIL_URL, [
             RequestOptions::QUERY => $this->filter(array_merge($optional, [
                 'ip'          => $ip,
                 'port'        => $port,
@@ -665,7 +665,7 @@ class InstanceProvider extends AbstractProvider
             ['timeout', 'is_float', false],
         ]);
 
-        return $this->requestAsync(self::BEAT_METHOD, self::BEAT_URL, [
+        return $this->requestAsyncUseEventLoop(self::BEAT_METHOD, self::BEAT_URL, [
             RequestOptions::QUERY => $this->filter([
                 'serviceName' => $options['serviceName'] ?? null,
                 'ip'          => $options['beat']['ip'] ?? null,
